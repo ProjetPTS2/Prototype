@@ -1,4 +1,4 @@
-package pts2;
+package pts2.donnees;
 
 import javafx.scene.paint.Color;
 

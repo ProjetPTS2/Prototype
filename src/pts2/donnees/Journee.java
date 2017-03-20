@@ -1,8 +1,10 @@
-package pts2;
+package pts2.donnees;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
+import pts2.HeureEDT;
+import pts2.Jours;
 
 
 public class Journee {

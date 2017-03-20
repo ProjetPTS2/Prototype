@@ -1,5 +1,10 @@
 package pts2;
 
+import pts2.donnees.Cours;
+import pts2.donnees.Semaine;
+import pts2.composants.ComposantSurvol;
+import pts2.composants.ComposantHeure;
+import pts2.composants.ComposantTexte;
 import java.util.Calendar;
 import java.util.Map.Entry;
 import java.util.Set;

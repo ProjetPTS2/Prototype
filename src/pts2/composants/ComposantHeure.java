@@ -3,13 +3,16 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package pts2;
+package pts2.composants;
 
 import javafx.event.EventHandler;
 import javafx.scene.Cursor;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import pts2.Constantes;
+import pts2.donnees.Cours;
+import pts2.HeureEDT;
 
 /**
  *
@@ -45,7 +48,9 @@ public class ComposantHeure extends ComposantTexte {
                 survol.setTexte(cours.getMatiere().getNom() + 
                         "\nType: " + cours.getTypeCours() + 
                         "\nSalle: " + cours.getSalle().getNom() +
+                        "\nEnseignant: " + cours.getEnseignant().toString() +
                         "\n" + heure.getHeureDebutString() + " - " + heure.getHeureFinString());
+                
                 sourisSurvol = true;
             }
         });
