@@ -16,6 +16,9 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
+import javafx.scene.control.CheckMenuItem;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
@@ -45,6 +48,10 @@ public class AccueilController implements IFenetre, Initializable {
     private ScrollPane semainesScrollPane;
     @FXML
     private ScrollPane edtScrollPane;
+    @FXML
+    private Menu snapMenu;
+    
+    public static int SNAP = 1;
     
     
     
@@ -120,6 +127,54 @@ public class AccueilController implements IFenetre, Initializable {
     
     public void menuBar_edtion_editerMatieres() {
         EDT.getInstance().afficherFenetre(new EditerMatieresController());
+    }
+    
+    
+    
+    public void menuBar_edition_snap_1() {
+        this.setSnap(0);
+    }
+    public void menuBar_edition_snap_5() {
+        this.setSnap(5);        
+    }
+    public void menuBar_edition_snap_10() {
+        this.setSnap(10);
+    }
+    public void menuBar_edition_snap_15() {
+        this.setSnap(15);
+    }
+    public void menuBar_edition_snap_30() {
+        this.setSnap(30);
+    }
+    
+    public void setSnap(int nombre) {
+        SNAP = nombre;
+        int i = 0;
+        int itemId = 0;
+        switch (nombre) {
+            case 5:
+                itemId = 1;
+                break;
+            case 10:
+                itemId = 2;
+                break;
+            case 15:
+                itemId = 3;
+                break;
+            case 30:
+                itemId = 4;
+                break;
+            default:
+                break;
+        }
+        for(MenuItem item : snapMenu.getItems()) {
+            CheckMenuItem check = (CheckMenuItem)item;
+            if(i != itemId)
+                check.setSelected(false);
+            else
+                check.setSelected(true);
+            i++;
+        }
     }
     
 }

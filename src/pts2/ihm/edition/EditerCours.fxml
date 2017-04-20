@@ -58,13 +58,13 @@
           </items>
         </ComboBox>
         <Label font="$x1" text="Enseignant:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
-        <Label font="$x1" text="Heure Début:" GridPane.columnIndex="0" GridPane.rowIndex="5" />
-        <Label font="$x1" text="Heure Fin:" GridPane.columnIndex="0" GridPane.rowIndex="6" />
+        <Label font="$x1" text="Heure:" GridPane.columnIndex="0" GridPane.rowIndex="5" />
+        <Label font="$x1" text="Durée:" GridPane.columnIndex="0" GridPane.rowIndex="6" />
         <GridPane GridPane.columnIndex="1" GridPane.rowIndex="5">
           <children>
             <Label font="$x1" text="h" GridPane.columnIndex="1" GridPane.rowIndex="0" />
-            <TextField fx:id="heureDebut" alignment="CENTER_RIGHT" prefWidth="200.0" promptText="Heure début..." GridPane.columnIndex="0" GridPane.rowIndex="0" />
-            <TextField fx:id="minuteDebut" alignment="CENTER_RIGHT" prefWidth="200.0" promptText="Minute début..." GridPane.columnIndex="2" GridPane.rowIndex="0" />
+            <TextField id="heureDebut" fx:id="heureTexte" alignment="CENTER_RIGHT" prefWidth="200.0" promptText="Heure début..." GridPane.columnIndex="0" GridPane.rowIndex="0" />
+            <TextField id="minuteDebut" fx:id="minuteTexte" alignment="CENTER_RIGHT" prefWidth="200.0" promptText="Minute début..." GridPane.columnIndex="2" GridPane.rowIndex="0" />
           </children>
           <columnConstraints>
             <ColumnConstraints hgrow="SOMETIMES" maxWidth="93.0" minWidth="10.0" prefWidth="93.0" />
@@ -77,14 +77,12 @@
         </GridPane>
         <GridPane GridPane.columnIndex="1" GridPane.rowIndex="6">
           <children>
-            <Label font="$x1" text="h" GridPane.columnIndex="1" GridPane.rowIndex="0" />
-            <TextField fx:id="heureFin" alignment="CENTER_RIGHT" prefWidth="200.0" promptText="Heure fin..." GridPane.columnIndex="0" GridPane.rowIndex="0" />
-            <TextField fx:id="minuteFin" alignment="CENTER_RIGHT" prefWidth="200.0" promptText="Minute fin..." GridPane.columnIndex="2" GridPane.rowIndex="0" />
+            <Label font="$x1" text="min" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+            <TextField id="heureFin" fx:id="dureeTexte" alignment="CENTER_RIGHT" prefWidth="200.0" promptText="Temps en minutes..." GridPane.columnIndex="0" GridPane.rowIndex="0" />
           </children>
           <columnConstraints>
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="93.0" minWidth="10.0" prefWidth="93.0" />
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="71.0" minWidth="10.0" prefWidth="27.0" />
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="115.0" minWidth="10.0" prefWidth="93.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="136.0" minWidth="10.0" prefWidth="92.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="122.0" minWidth="10.0" prefWidth="121.0" />
           </columnConstraints>
           <rowConstraints>
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />

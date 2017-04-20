@@ -1,6 +1,7 @@
 package pts2.donnees;
 
 import pts2.BDD;
+import pts2.Jours;
 import pts2.utilitaire.ISauvegarde;
 import pts2.utilitaire.XMLEcriture;
 import pts2.utilitaire.XMLObjet;
@@ -10,6 +11,7 @@ public class Cours implements ISauvegarde {
     
     // FAIRE SAUVEGARDER/CHARGE HEURE
     
+    private Jours jours;
     private HeureEDT heure;
     private Enseignant enseignant;
     private String typeCours;
@@ -23,12 +25,17 @@ public class Cours implements ISauvegarde {
      * @param salle La salle de ce cours.
      * @param typeCours Le type de ce cours.
      */
-    public Cours(HeureEDT heure, Enseignant enseignant, Matiere matiere, Salle salle, String typeCours) {
+    public Cours(Jours jours, HeureEDT heure, Enseignant enseignant, Matiere matiere, Salle salle, String typeCours) {
+        this.jours = jours;
         this.heure = heure;
         this.enseignant = enseignant;
         this.matiere = matiere;
         this.typeCours = typeCours;
         this.salle = salle;
+    }
+    
+    public Jours getJours() {
+        return this.jours;
     }
     
     public HeureEDT getHeure() {
@@ -49,6 +56,15 @@ public class Cours implements ISauvegarde {
     
     public Salle getSalle() {
         return this.salle;
+    }
+    
+    
+    public void setJours(Jours jours) {
+        this.jours = jours;
+    }
+    
+    public void setHeure(HeureEDT heure) {
+        this.heure = heure;
     }
     
     public void setEnseignant(Enseignant enseignant) {
@@ -75,6 +91,8 @@ public class Cours implements ISauvegarde {
         xml.ecrireValeur("TypeCours", this.typeCours);
         this.matiere.sauvegarder(xml);
         this.salle.sauvegarder(xml);
+        this.heure.sauvegarder(xml);
+        xml.ecrireValeur("Jours", this.jours.getNumero()+"");
         xml.fermerBalise();
     }
 
@@ -88,5 +106,8 @@ public class Cours implements ISauvegarde {
         this.matiere = bdd.getMatiere(diminutifMatiere);
         String nomSalle = xml.getSousCategories().get(2).getPremiereValeur("Nom");
         this.salle = bdd.getSalle(nomSalle);
+        this.heure = new HeureEDT(0, 0, 0);
+        this.heure.charger(xml.getSousCategories().get(3), bdd);
+        this.jours = Jours.values()[Integer.parseInt(xml.getPremiereValeur("Jours"))];
     }
 }

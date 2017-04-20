@@ -6,20 +6,13 @@
 package pts2.composants;
 
 import java.util.Calendar;
-import java.util.Map;
-import javafx.event.EventHandler;
-import javafx.geometry.Bounds;
 import javafx.scene.Group;
 import javafx.scene.Node;
-import javafx.scene.input.DragEvent;
-import javafx.scene.input.TransferMode;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
 import pts2.Constantes;
 import pts2.EDT;
 import pts2.Jours;
 import pts2.donnees.Cours;
-import pts2.donnees.HeureEDT;
 import pts2.donnees.Semaine;
 
 /**
@@ -88,13 +81,11 @@ public class ComposantEDT extends Pane {
         this.edtCours.getChildren().clear();
         
         // AFFICHAGE DES COURS
-        for(int jour = 0; jour < Jours.values().length; jour++) {
-            for(Map.Entry<HeureEDT, Cours> cours : semaine.getListeCours(Jours.values()[jour])) {
-                    ComposantHeure coursComposant = new ComposantHeure(cours.getKey(), cours.getValue(), "", (cours.getKey().getHeure()-Constantes.HEURE_DEBUT) * Constantes.LARGEUR_HEURES + Constantes.LARGEUR_JOURS + Constantes.MARGE_HORIZONTAL, jour * Constantes.HAUTEUR_JOURS + Constantes.HAUTEUR_HEURES + Constantes.MARGE_VERTICAL);
-                    coursComposant.setTexte(cours.getValue().getMatiere().getDiminutif() + " - " + cours.getValue().getTypeCours());
-                    coursComposant.initialiserEvents(this.getScene(), this.parent, this.texteSurvol);
-                    this.edtCours.getChildren().add(coursComposant);
-            }
+        for(Cours cours : semaine.getListeCours()) {
+                ComposantHeure coursComposant = new ComposantHeure(cours, "", (cours.getHeure().getHeure()-Constantes.HEURE_DEBUT) * Constantes.LARGEUR_HEURES + Constantes.LARGEUR_JOURS + Constantes.MARGE_HORIZONTAL, cours.getJours().getNumero() * Constantes.HAUTEUR_JOURS + Constantes.HAUTEUR_HEURES + Constantes.MARGE_VERTICAL);
+                coursComposant.setTexte(cours.getMatiere().getDiminutif() + " - " + cours.getTypeCours());
+                coursComposant.initialiserEvents(this.getScene(), this.parent, this.texteSurvol);
+                this.edtCours.getChildren().add(coursComposant);
         }
         this.texteSurvol.toFront();
     }

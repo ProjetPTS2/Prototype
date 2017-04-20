@@ -19,8 +19,6 @@ import javafx.scene.Parent;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import pts2.BDD;
-import pts2.Constantes;
 import pts2.EDT;
 import pts2.donnees.Cours;
 import pts2.donnees.Enseignant;
@@ -47,7 +45,7 @@ public class EditerCoursController implements IFenetre, Initializable {
     @FXML
     private ComboBox typeCours, enseignant, matiere, salle;
     @FXML
-    private TextField heureDebut, heureFin, minuteDebut, minuteFin;
+    private TextField heureTexte, minuteTexte, dureeTexte;
     
     public EditerCoursController(Cours cours, HeureEDT heure) {
         this.cours = cours;
@@ -131,30 +129,23 @@ public class EditerCoursController implements IFenetre, Initializable {
         this.typeCours.setItems(FXCollections.observableList(liste));
         this.typeCours.getSelectionModel().select(index);
         
-        this.heureDebut.setText(this.heure.getHeure() + "");
-        this.heureFin.setText(this.heure.getHeureFin() + "");
-        this.minuteDebut.setText(this.heure.getMinute() + "");
-        this.minuteFin.setText(this.heure.getMinuteFin() + "");
+        this.heureTexte.setText(this.heure.getHeure() + "");
+        this.minuteTexte.setText(this.heure.getMinute() + "");
+        this.dureeTexte.setText(this.heure.getDuree() + "");
         
         
-        this.heureDebut.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
+        this.heureTexte.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
             if (!newValue.matches("\\d*") || newValue.length() > 2)
-                this.heureDebut.setText(oldValue);
+                this.heureTexte.setText(oldValue);
+        });
+        this.minuteTexte.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
+            if (!newValue.matches("\\d*") || newValue.length() > 2)
+                this.minuteTexte.setText(oldValue);
         });
         
-        this.heureFin.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
-            if (!newValue.matches("\\d*") || newValue.length() > 2)
-                this.heureFin.setText(oldValue);
-        });
-        
-        this.minuteDebut.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
-            if (!newValue.matches("\\d*") || newValue.length() > 2)
-                this.minuteDebut.setText(oldValue);
-        });
-        
-        this.minuteFin.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
-            if (!newValue.matches("\\d*") || newValue.length() > 2)
-                this.minuteFin.setText(oldValue);
+        this.dureeTexte.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
+            if (!newValue.matches("\\d*"))
+                this.dureeTexte.setText(oldValue);
         });
         
     }   
@@ -169,10 +160,9 @@ public class EditerCoursController implements IFenetre, Initializable {
         this.cours.setEnseignant(EDT.getInstance().getBDD().getEnseignant((String)this.enseignant.getSelectionModel().getSelectedItem()));
         this.cours.setTypeCours((String)this.typeCours.getSelectionModel().getSelectedItem());
         
-        this.heure.setHeure(Integer.parseInt(this.heureDebut.getText()));
-        this.heure.setHeureFin(Integer.parseInt(this.heureFin.getText()));
-        this.heure.setMinute(Integer.parseInt(this.minuteDebut.getText()));
-        this.heure.setMinuteFin(Integer.parseInt(this.minuteFin.getText()));
+        this.heure.setHeure(Integer.parseInt(this.heureTexte.getText()));
+        this.heure.setMinute(Integer.parseInt(this.minuteTexte.getText()));
+        this.heure.setDuree(Integer.parseInt(this.dureeTexte.getText()));
         
         
         this.accueilController.actualiser();

@@ -83,10 +83,10 @@ public class EDT extends Application {
         bebien.ajouterMatiere(this.bdd.getMatiere("POO"));    
         
         
-        this.bdd.placerCours(11, "VBe", new HeureEDT(10, 10, 12, 0), Jours.JEUDI, "POO", "D301", "TP");
-        this.bdd.placerCours(11, "VBe", new HeureEDT(15, 0, 17, 45), Jours.LUNDI, "ANG", "D201", "TD");
-        this.bdd.placerCours(16, "ADo", new HeureEDT(9, 0, 9, 30), Jours.LUNDI, "BD", "D201", "TD");
-        this.bdd.placerCours(16, "ADo", new HeureEDT(8, 15, 9, 50), Jours.MARDI, "POO", "D201", "TD");
+        this.bdd.placerCours(11, "VBe", new HeureEDT(10, 10, 120), Jours.JEUDI, "POO", "D301", "TP");
+        this.bdd.placerCours(11, "VBe", new HeureEDT(15, 0, 90), Jours.LUNDI, "ANG", "D201", "TD");
+        this.bdd.placerCours(16, "ADo", new HeureEDT(9, 0, 60), Jours.LUNDI, "BD", "D201", "TD");
+        this.bdd.placerCours(16, "ADo", new HeureEDT(8, 15, 60), Jours.MARDI, "POO", "D201", "TD");
     }
     
     /**

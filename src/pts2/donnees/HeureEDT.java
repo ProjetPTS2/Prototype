@@ -17,57 +17,46 @@ import pts2.utilitaire.XMLObjet;
 public class HeureEDT implements ISauvegarde {
     
     // Changer heureFin minuteFin en duree(min)
-    private int heure, minute, heureFin, minuteFin;
+    private int heure, minute, duree;
     
     public HeureEDT(int heure, int minute) {
         this.heure = heure;
         this.minute = minute;
-        this.heureFin = heure+1;
-        this.minuteFin = minute;
+        this.duree = 0;
     }
     
-    public HeureEDT(int heure, int minute, int heureFin, int minuteFin) {
+    public HeureEDT(int heure, int minute, int duree) {
         this.heure = heure;
         this.minute = minute;
-        this.heureFin = heureFin;
-        this.minuteFin = minuteFin;
+        this.duree = duree;
     }
     
     public int getHeure() {
         return this.heure;
     }
     
-    public int getHeureFin() {
-        return this.heureFin;
-    }
-    
     public int getMinute() {
         return this.minute;
     }
     
-    public int getMinuteFin() {
-        return this.minuteFin;
-    }
-    
-    public double getDuree() {
-        double debut = ((double)heure * 100 + ((double)minute*100/60))/100;
-        double fin = ((double)heureFin * 100 + ((double)minuteFin*100/60))/100;
-        return fin - debut;
+    public int getDuree() {
+        return this.duree;
     }
     
     public String getHeureDebutString() {
-        String str = heure + "h";
-        if(minute < 10)
+        String str = this.heure + "h";
+        if(this.minute < 10)
             str += "0";
-        str += minute;
+        str += this.minute;
         return str;
     }
     
     public String getHeureFinString() {
-        String str = heureFin + "h";
-        if(minuteFin < 10)
+        int minuteTotal = this.heure * 60 + this.minute + this.duree;
+        String str = (minuteTotal/60) + "h";
+        if((minuteTotal%60) < 10)
             str += "0";
-        str += minuteFin;
+        str += (minuteTotal%60);
         return str;
     }
     
@@ -75,25 +64,26 @@ public class HeureEDT implements ISauvegarde {
         this.heure = heure;
     }
     
-    public void setHeureFin(int heure) {
-        this.heureFin = heure;
-    }
-    
     public void setMinute(int minute) {
         this.minute = minute;
     }
     
-    public void setMinuteFin(int minute) {
-        this.minuteFin = minute;
+    public void setDuree(int duree) {
+        this.duree = duree;
     }
 
+    public boolean compare(HeureEDT heure) {
+        return this.heure == heure.heure &&
+                this.minute == heure.minute &&
+                this.duree == heure.duree;
+    }
+    
     @Override
     public void sauvegarder(XMLEcriture xml) {
         xml.ouvrirBalise("Heure");
         xml.ecrireValeur("HeureDebut", ""+this.heure);
         xml.ecrireValeur("MinuteDebut", ""+this.minute);
-        xml.ecrireValeur("HeureFin", ""+this.heureFin);
-        xml.ecrireValeur("MinuteFin", ""+this.minuteFin);
+        xml.ecrireValeur("Duree", ""+this.duree);
         xml.fermerBalise();
     }
 
@@ -101,7 +91,6 @@ public class HeureEDT implements ISauvegarde {
     public void charger(XMLObjet xml, BDD bdd) {
         this.heure = Integer.parseInt(xml.getPremiereValeur("HeureDebut"));
         this.minute = Integer.parseInt(xml.getPremiereValeur("MinuteDebut"));
-        this.heureFin = Integer.parseInt(xml.getPremiereValeur("HeureFin"));
-        this.minuteFin = Integer.parseInt(xml.getPremiereValeur("MinuteFin"));
+        this.duree = Integer.parseInt(xml.getPremiereValeur("Duree"));
     }
 }

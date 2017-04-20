@@ -62,7 +62,7 @@ public class BDD {
     public void placerCours(int noSemaine, String enseignant, HeureEDT heure, Jours jour, String matiere, String nomSalle, String typeCours) {
         if(!this.listeSemaines.containsKey(noSemaine))
             this.listeSemaines.put(noSemaine, new Semaine(noSemaine));
-        this.listeSemaines.get(noSemaine).ajouterCours(heure, new Cours(heure, this.getEnseignant(enseignant), this.getMatiere(matiere), this.getSalle(nomSalle), typeCours), jour);
+        this.listeSemaines.get(noSemaine).ajouterCours(new Cours(jour, heure, this.getEnseignant(enseignant), this.getMatiere(matiere), this.getSalle(nomSalle), typeCours));
     }
     
     /**

@@ -6,20 +6,17 @@
 package pts2.composants;
 
 import javafx.event.EventHandler;
-import javafx.geometry.Bounds;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.input.ClipboardContent;
-import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.input.TransferMode;
 import javafx.scene.paint.Color;
 import pts2.Constantes;
 import pts2.EDT;
 import pts2.Jours;
 import pts2.donnees.Cours;
 import pts2.donnees.HeureEDT;
+import pts2.ihm.AccueilController;
 import pts2.ihm.edition.EditerCoursController;
 
 /**
@@ -32,13 +29,13 @@ public class ComposantHeure extends ComposantTexte {
     private final Cours cours;
     private boolean sourisSurvol;
     
-    public ComposantHeure(HeureEDT heure, Cours cours, String str, int x, int y) {
-        super(str, x + Constantes.LARGEUR_HEURES*heure.getMinute()/60, y, Constantes.LARGEUR_HEURES, Constantes.HAUTEUR_JOURS);
-        this.heure = heure;
+    public ComposantHeure(Cours cours, String str, int x, int y) {
+        super(str, x + Constantes.LARGEUR_HEURES*cours.getHeure().getMinute()/60, y, Constantes.LARGEUR_HEURES, Constantes.HAUTEUR_JOURS);
+        this.heure = cours.getHeure();
         this.cours = cours;
         this.setLayoutX(x + Constantes.LARGEUR_HEURES*heure.getMinute()/60);
         
-        this.rectangle.setWidth(Constantes.LARGEUR_HEURES * heure.getDuree());
+        this.rectangle.setWidth(Constantes.LARGEUR_HEURES * heure.getDuree()/60);
         this.rectangle.setFill(cours.getMatiere().getCouleur());
         
         this.texte.setFill(Color.WHITE);
@@ -83,20 +80,23 @@ public class ComposantHeure extends ComposantTexte {
             }
         });
         
-        this.setOnMouseClicked(new EventHandler<MouseEvent>() {
+        this.setOnMousePressed(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                EDT.getInstance().afficherFenetre(new EditerCoursController(cours, heure));
+                if(event.isSecondaryButtonDown())
+                    EDT.getInstance().afficherFenetre(new EditerCoursController(cours, heure));
             }
         });
         
         this.setOnMouseDragged(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
+                if(!event.isPrimaryButtonDown())
+                    return;
                 int x = (int)(event.getSceneX() - parent.getLayoutX());
                 int y = (int)(event.getSceneY() - parent.getLayoutY());
                 
-                int origineX = Constantes.LARGEUR_JOURS - Constantes.MARGE_HORIZONTAL;
+                int origineX = Constantes.LARGEUR_JOURS + Constantes.MARGE_HORIZONTAL;
                 int origineY = Constantes.HAUTEUR_JOURS - Constantes.MARGE_VERTICAL;
                 
                 int colonne = (x - Constantes.LARGEUR_JOURS - Constantes.MARGE_HORIZONTAL)/Constantes.LARGEUR_HEURES;
@@ -110,15 +110,22 @@ public class ComposantHeure extends ComposantTexte {
                 int heure = colonne + Constantes.HEURE_DEBUT;
                 Jours jours = Jours.values()[ligne];
                 
-                int minute = Math.abs(60*(colonne * Constantes.LARGEUR_HEURES + (Constantes.LARGEUR_JOURS + Constantes.MARGE_HORIZONTAL) - x)/150);
+                int minute = Math.abs(60*(colonne * Constantes.LARGEUR_HEURES + (Constantes.LARGEUR_JOURS + Constantes.MARGE_HORIZONTAL) - x)/Constantes.LARGEUR_HEURES);
+                minute /= AccueilController.SNAP;
+                minute *= AccueilController.SNAP;
                 
-                System.out.println(heure + "h" + minute + " - " + jours.getNom());
-                
-                
-                int compX = x;
+                int compX = Constantes.MARGE_HORIZONTAL + Constantes.LARGEUR_JOURS 
+                        + (heure-Constantes.HEURE_DEBUT) * Constantes.LARGEUR_HEURES
+                        + (int)(Constantes.LARGEUR_HEURES * (float)minute/60f);
                 int compY = ligne * Constantes.HAUTEUR_JOURS + origineY;
-                if(compX < origineX)
+                if(x < origineX) {
                     compX = origineX;
+                    minute = 0;
+                }
+                
+                cours.setJours(jours);
+                cours.getHeure().setHeure(heure);
+                cours.getHeure().setMinute(minute);
                 
                 
                 setLayoutX(compX);

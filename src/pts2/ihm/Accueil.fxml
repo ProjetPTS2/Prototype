@@ -54,6 +54,16 @@
           <items>
             <MenuItem mnemonicParsing="false" onAction="#menuBar_edtion_editerSalles" text="Editer les salles" />
             <MenuItem mnemonicParsing="false" onAction="#menuBar_edtion_editerMatieres" text="Editer les matières" />
+            <SeparatorMenuItem mnemonicParsing="false" />
+            <Menu mnemonicParsing="false" text="Snap" fx:id="snapMenu">
+              <items>
+                <CheckMenuItem mnemonicParsing="false" onAction="#menuBar_edition_snap_1" selected="true" text="1 minute" />
+                <CheckMenuItem mnemonicParsing="false" onAction="#menuBar_edition_snap_5" text="5 minutes" />
+                <CheckMenuItem mnemonicParsing="false" onAction="#menuBar_edition_snap_10" text="10 minutes" />
+                <CheckMenuItem mnemonicParsing="false" onAction="#menuBar_edition_snap_15" text="15 minutes" />
+                <CheckMenuItem mnemonicParsing="false" onAction="#menuBar_edition_snap_30" text="30 minutes" />
+              </items>
+            </Menu>
           </items>
         </Menu>
         <Menu disable="true" mnemonicParsing="false" text="Aide">
