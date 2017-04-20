@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.collections.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2">
+  <children>
+    <TabPane layoutX="0.0" layoutY="0.0" prefHeight="400.0" prefWidth="600.0" rotateGraphic="false" tabClosingPolicy="UNAVAILABLE">
+      <tabs>
+        <Tab text="Ajouter Salle">
+          <content>
+            <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+              <children>
+                <Label layoutX="41.0" layoutY="42.0" text="Nom Salle:" textOverrun="ELLIPSIS">
+                  <font>
+                    <Font size="15.0" fx:id="x1" />
+                  </font>
+                </Label>
+                <TextField fx:id="ajouterSalle_nomSalle" layoutX="134.0" layoutY="37.0" prefHeight="29.0" prefWidth="201.0" promptText="Nom de la salle..." text="" />
+                <Label font="$x1" layoutX="41.0" layoutY="79.0" text="Capacité:" textOverrun="ELLIPSIS" />
+                <TextField id="capacite" fx:id="ajouterSalle_capacite" editable="true" layoutX="134.0" layoutY="74.0" prefHeight="29.0" prefWidth="200.00009999999747" promptText="Capacité de la salle..." text="" />
+                <Button id="ajouterSalle_boutonValider" defaultButton="true" font="$x1" layoutX="77.0" layoutY="307.0" mnemonicParsing="false" onMouseClicked="#ajouterSalle_valider" prefHeight="48.0" prefWidth="455.0" text="Ajouter la Salle" textAlignment="LEFT" />
+                <Label fx:id="ajouterSalle_resultat" layoutX="41.0" layoutY="271.0" text="Resultat" textFill="#00993d">
+                  <font>
+                    <Font name="System Bold" size="16.0" />
+                  </font>
+                </Label>
+              </children>
+            </AnchorPane>
+          </content>
+        </Tab>
+        <Tab fx:id="tab" onSelectionChanged="#changementTab" text="Editer Salles">
+          <content>
+            <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="300.0" prefWidth="600.0">
+              <children>
+                <Label layoutX="55.0" layoutY="40.0" text="Salle:">
+                  <font>
+                    <Font size="14.0" fx:id="x2" />
+                  </font>
+                </Label>
+                <Line endX="454.0" endY="0.0" layoutX="126.0" layoutY="83.0" startX="-100.0" />
+                <Label fx:id="editerSalles_resultat" font="$x2" layoutX="423.0" layoutY="40.0" text="Résultat" />
+                <ComboBox fx:id="editerSalles_choixSalle" layoutX="114.0" layoutY="40.0" prefHeight="21.0" prefWidth="297.0" promptText="-- Choix de la semaine --">
+                  <items>
+                    <FXCollections fx:factory="observableArrayList">
+                      <String fx:value="Item 1" />
+                      <String fx:value="Item 2" />
+                      <String fx:value="Item 3" />
+                    </FXCollections>
+                  </items>
+                </ComboBox>
+                <AnchorPane id="editer_Pane" fx:id="editerSalles_pane" disable="true" layoutX="0.0" layoutY="91.0" prefHeight="278.0" prefWidth="600.0">
+                  <children>
+                    <Label font="$x2" layoutX="52.0" layoutY="17.0" text="Nom:" />
+                    <TextField fx:id="editerSalles_nomSalle" layoutX="121.0" layoutY="14.0" prefHeight="24.000099999997474" prefWidth="297.0" promptText="Nom de la salle...." />
+                    <TextField id="editerSalle_capacite" fx:id="editerSalles_capacite" layoutX="121.0" layoutY="49.0" prefHeight="24.000099999997474" prefWidth="297.0" promptText="Capacité de la salle..." />
+                    <Label font="$x2" layoutX="52.0" layoutY="52.0" text="Capacité:" />
+                    <Button id="editerSalles_sauvegarder" defaultButton="true" font="$x2" layoutX="22.0" layoutY="219.0" mnemonicParsing="false" onMouseClicked="#editerSalles_sauvegarde" prefHeight="34.0" prefWidth="369.0" text="Sauvegarder" />
+                    <Button cancelButton="false" defaultButton="false" disable="false" layoutX="429.0" layoutY="218.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="140.0" text="Supprimer" textFill="RED">
+                      <font>
+                        <Font name="System Bold" size="14.0" />
+                      </font>
+                    </Button>
+                  </children>
+                </AnchorPane>
+              </children>
+            </AnchorPane>
+          </content>
+        </Tab>
+      </tabs>
+    </TabPane>
+  </children>
+</AnchorPane>

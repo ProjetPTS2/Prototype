@@ -5,20 +5,52 @@
  */
 package pts2.donnees;
 
+import pts2.BDD;
+import pts2.utilitaire.ISauvegarde;
+import pts2.utilitaire.XMLEcriture;
+import pts2.utilitaire.XMLObjet;
+
 /**
  *
  * @author tgallard
  */
-public class Salle {
+public class Salle implements ISauvegarde {
     
-    private final String nom;
+    private String nom;
+    private int capacite;
     
-    public Salle(String nom) {
+    public Salle(String nom, int capacite) {
         this.nom = nom;
+        this.capacite = capacite;
     }
     
     public String getNom() {
         return this.nom;
     }
     
+    public int getCapacite() {
+        return this.capacite;
+    }
+    
+    public void setNom(String nom) {
+        this.nom = nom;
+    }
+    
+    public void setCapacite(int capacite) {
+        this.capacite = capacite;
+    }
+    
+    @Override
+    public void sauvegarder(XMLEcriture xml) {
+        xml.ouvrirBalise("Salle");
+        xml.ecrireValeur("Nom", this.getNom());
+        xml.ecrireValeur("Capacite", this.capacite + "");
+        xml.fermerBalise();
+    }
+
+    @Override
+    public void charger(XMLObjet xml, BDD bdd) {
+        this.nom = xml.getPremiereValeur("Nom");
+        this.capacite = Integer.parseInt(xml.getPremiereValeur("Capacite"));
+    }
 }

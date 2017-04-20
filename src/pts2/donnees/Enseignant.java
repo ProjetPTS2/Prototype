@@ -6,20 +6,31 @@
 package pts2.donnees;
 
 import java.util.ArrayList;
+import pts2.BDD;
+import pts2.utilitaire.ISauvegarde;
+import pts2.utilitaire.XMLEcriture;
+import pts2.utilitaire.XMLObjet;
 
 /**
  *
  * @author tgallard
  */
-public class Enseignant {
+public class Enseignant implements ISauvegarde {
     
-    private final String nom, prenom, diminutif;
+    private String nom, prenom, diminutif;
     private final ArrayList<Matiere> listeMatieres;
     
     public Enseignant(String nom, String prenom) {
+        this(nom, prenom, null);
+    }
+    
+    public Enseignant(String nom, String prenom, String diminutif) {
         this.nom = nom;
         this.prenom = prenom;
-        this.diminutif = prenom.charAt(0) + "" +  nom.charAt(0) + "" + nom.toLowerCase().charAt(1);
+        if(diminutif == null && nom != null && prenom != null)
+            this.diminutif = prenom.charAt(0) + "" +  nom.charAt(0) + "" + nom.toLowerCase().charAt(1);
+        else
+            this.diminutif = "NULL";
         this.listeMatieres = new ArrayList<>();
     }
     
@@ -35,6 +46,10 @@ public class Enseignant {
         return this.diminutif;
     }
     
+    public ArrayList<Matiere> getMatieres() {
+        return this.listeMatieres;
+    }
+    
     public void ajouterMatiere(Matiere matiere) {
         this.listeMatieres.add(matiere);
     }
@@ -46,5 +61,30 @@ public class Enseignant {
     @Override
     public String toString() {
         return this.nom + " " + this.prenom;
+    }
+
+    @Override
+    public void sauvegarder(XMLEcriture xml) {
+        xml.ouvrirBalise("Enseignant");
+        xml.ecrireValeur("Diminutif", this.getDiminutif());
+        xml.ecrireValeur("Nom", this.getNom());
+        xml.ecrireValeur("Prenom", this.getPrenom());
+        xml.ouvrirBalise("Matieres");
+        for(Matiere matiere : this.getMatieres())
+            matiere.sauvegarder(xml);
+        xml.fermerBalise();
+        xml.fermerBalise();
+    }
+
+    @Override
+    public void charger(XMLObjet xml, BDD bdd) {
+        this.nom = xml.getPremiereValeur("Nom");
+        this.prenom = xml.getPremiereValeur("Prenom");
+        this.diminutif = prenom.charAt(0) + "" +  nom.charAt(0) + "" + nom.toLowerCase().charAt(1);
+        
+        for(XMLObjet matiere : xml.getSousCategories().get(0).getSousCategories()) {
+            String nomMatiere = matiere.getPremiereValeur("Diminutif");
+            this.listeMatieres.add(bdd.getMatiere(nomMatiere));
+        }
     }
 }
