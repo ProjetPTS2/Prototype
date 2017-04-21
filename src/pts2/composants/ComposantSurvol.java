@@ -6,6 +6,7 @@
 package pts2.composants;
 
 import javafx.geometry.Insets;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
@@ -23,7 +24,7 @@ public class ComposantSurvol extends StackPane {
     
     private final Text texte;
     
-    private static final double PADDING_LEFT_RIGHT = 6.0, PADDING_TOP_BOTTOM = 9.0;
+    public static final double MARGIN_LEFT = 17, PADDING_LEFT_RIGHT = 6.0, PADDING_TOP_BOTTOM = 9.0;
     
     public ComposantSurvol() {
         this.texte = new Text();
@@ -48,7 +49,16 @@ public class ComposantSurvol extends StackPane {
     }
     
     public void setPosition(double x, double y) {
-        this.setLayoutX(x + PADDING_LEFT_RIGHT + 17);
+        this.setLayoutX(x + PADDING_LEFT_RIGHT + MARGIN_LEFT);
         this.setLayoutY(y + PADDING_TOP_BOTTOM);
+    }
+    
+    public void actualiserPosition(ScrollPane scrollPane, ComposantEDT edt, double x, double y) {
+        double minX = -1 * scrollPane.getViewportBounds().getMinX() + 1;
+        double maxX = minX + scrollPane.getViewportBounds().getWidth();
+        double _x = minX + x;
+        if((_x + this.getWidth() + MARGIN_LEFT + PADDING_LEFT_RIGHT) > maxX)
+            _x = x - this.getWidth() - 2*MARGIN_LEFT - 2*PADDING_LEFT_RIGHT + minX;
+        this.setPosition(_x, y);
     }
 }

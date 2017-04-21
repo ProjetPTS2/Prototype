@@ -12,7 +12,7 @@
 <AnchorPane id="AnchorPane" fx:id="racinePane" prefHeight="720.0" prefWidth="1280.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2">
   <children>
     <ScrollPane fx:id="semainesScrollPane" content="$null" focusTraversable="false" layoutY="27.0" minHeight="0.0" prefHeight="60.0" prefWidth="1280.0" style="-fx-focus-color: transparent;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
-    <ScrollPane fx:id="edtScrollPane" content="$null" layoutY="87.0" prefHeight="467.0" prefWidth="949.0" style="-fx-focus-color: transparent;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+    <ScrollPane fx:id="edtScrollPane" content="$null" layoutY="87.0" prefHeight="467.0" prefWidth="949.0" style="-fx-focus-color: transparent;" vbarPolicy="NEVER" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
     <Pane focusTraversable="true" prefHeight="86.0" prefWidth="587.0000999999975" rotate="30.0" visible="true" AnchorPane.rightAnchor="-198.0" AnchorPane.topAnchor="44.0">
       <children>
         <Rectangle arcHeight="0.0" arcWidth="0.0" fill="#1ec251" focusTraversable="false" height="87.70629119873047" layoutX="0.0" layoutY="0.0" opacity="0.77" smooth="true" stroke="BLACK" strokeLineCap="SQUARE" strokeLineJoin="MITER" strokeMiterLimit="10.0" strokeType="INSIDE" strokeWidth="1.9" width="585.8534698486328">

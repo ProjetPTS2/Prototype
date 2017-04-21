@@ -40,7 +40,6 @@ public class AccueilController implements IFenetre, Initializable {
     
     private ComposantSemaines composantSemaines;
     private ComposantEDT composantEDT;
-    private ComposantSurvol composantSurvol;
     
     @FXML
     private AnchorPane racinePane;
@@ -91,11 +90,9 @@ public class AccueilController implements IFenetre, Initializable {
     
     @Override
     public void initialize(URL url, ResourceBundle rb) { 
-        this.composantSurvol = new ComposantSurvol();
-        this.composantEDT = new ComposantEDT(this.edtScrollPane, this.composantSurvol);
+        this.composantEDT = new ComposantEDT(this.edtScrollPane);
         this.composantSemaines = new ComposantSemaines(Calendar.getInstance().get(Calendar.WEEK_OF_YEAR));
         
-        this.racinePane.getChildren().add(this.composantSurvol);
         this.semainesScrollPane.setContent(this.composantSemaines);
         this.edtScrollPane.setContent(this.composantEDT);
     }    

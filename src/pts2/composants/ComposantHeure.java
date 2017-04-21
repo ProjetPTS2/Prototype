@@ -9,6 +9,7 @@ import javafx.event.EventHandler;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import pts2.Constantes;
@@ -62,11 +63,8 @@ public class ComposantHeure extends ComposantTexte {
         
         this.setOnMouseMoved(new EventHandler<MouseEvent>() {
             public void handle(MouseEvent event) {
-                if(sourisSurvol) {
-                    //survol.setPosition(event.getSceneX(), event.getSceneY());
-                    survol.setPosition(event.getSceneX(), event.getSceneY());
+                if(sourisSurvol)
                     survol.setVisible(true);
-                }
             }
         });
         
@@ -95,6 +93,10 @@ public class ComposantHeure extends ComposantTexte {
                     return;
                 int x = (int)(event.getSceneX() - parent.getLayoutX());
                 int y = (int)(event.getSceneY() - parent.getLayoutY());
+                
+                // Ajout du décalage du ScrollPane
+                if(parent instanceof ScrollPane)
+                    x += -1 * (int)((ScrollPane)(parent)).getViewportBounds().getMinX() + 1;
                 
                 int origineX = Constantes.LARGEUR_JOURS + Constantes.MARGE_HORIZONTAL;
                 int origineY = Constantes.HAUTEUR_JOURS - Constantes.MARGE_VERTICAL;
