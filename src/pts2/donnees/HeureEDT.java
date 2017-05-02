@@ -15,14 +15,11 @@ import pts2.utilitaire.XMLObjet;
  * @author local192
  */
 public class HeureEDT implements ISauvegarde {
-    
-    // Changer heureFin minuteFin en duree(min)
+
     private int heure, minute, duree;
     
     public HeureEDT(int heure, int minute) {
-        this.heure = heure;
-        this.minute = minute;
-        this.duree = 0;
+        this(heure, minute, 0);
     }
     
     public HeureEDT(int heure, int minute, int duree) {
@@ -77,6 +74,27 @@ public class HeureEDT implements ISauvegarde {
                 this.minute == heure.minute &&
                 this.duree == heure.duree;
     }
+    
+    public boolean intersection(HeureEDT heure) {
+        if(this.equals(heure))
+            return false;
+        if(this.compare(heure))
+            return true;
+        int totalMinute = this.heure * 60 + this.minute;
+        int totalMinute_fin = totalMinute + this.duree;
+        int totalMinute2 = heure.getHeure() * 60 + heure.minute;
+        int totalMinute2_fin = totalMinute2 + heure.getDuree();
+        
+        return  ((totalMinute > totalMinute2 && totalMinute < totalMinute2_fin) ||
+                (totalMinute_fin > totalMinute2 && totalMinute_fin < totalMinute2_fin) ||
+                (totalMinute2 > totalMinute && totalMinute2 < totalMinute_fin) ||
+                (totalMinute2_fin > totalMinute && totalMinute2_fin < totalMinute_fin));
+    }
+    
+    public HeureEDT dupliquer() {
+        return new HeureEDT(this.heure, this.minute, this.duree);
+    }
+    
     
     @Override
     public void sauvegarder(XMLEcriture xml) {

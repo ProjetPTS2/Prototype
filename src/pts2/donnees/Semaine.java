@@ -3,6 +3,7 @@ package pts2.donnees;
 import java.util.ArrayList;
 import java.util.List;
 import pts2.BDD;
+import pts2.Jours;
 import pts2.utilitaire.ISauvegarde;
 import pts2.utilitaire.XMLEcriture;
 import pts2.utilitaire.XMLObjet;
@@ -28,6 +29,26 @@ public class Semaine implements ISauvegarde {
     
     public List<Cours> getListeCours() {
         return this.listeCours;
+    }
+    
+    public List<Cours> getListeCours(Jours jours) {
+        List<Cours> cours = new ArrayList<>();
+        for(Cours c : this.listeCours) {
+            if(c.getJours() == jours)
+                cours.add(c);
+        }
+        return cours;
+    }
+    
+    public boolean intersectionHeure(Jours jours, HeureEDT heure) {
+        boolean resultat = false;
+        for(Cours cours : this.getListeCours(jours)) {
+            if(cours.getHeure().intersection(heure)) {
+                resultat = true;
+                break;
+            }
+        }
+        return resultat;
     }
 
     @Override

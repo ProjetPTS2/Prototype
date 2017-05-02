@@ -50,10 +50,11 @@ public class XMLEcriture {
      */
     public void ecrireValeur(String nomValeur, String valeur) {
         this.faireTabulation();
-        this.writer.print("<"+nomValeur+">");
+        /*this.writer.print("<"+nomValeur+">");
         this.writer.print(valeur);
-        this.writer.print("</"+nomValeur+">");
-        this.writer.println();
+        this.writer.print("</"+nomValeur+">");*/
+        String str = "<Valeur nom="+'"' + nomValeur + '"' + " valeur="+'"' + valeur + '"' + " />";
+        this.writer.println(str);
     }
     
     /**

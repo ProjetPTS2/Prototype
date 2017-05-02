@@ -20,16 +20,19 @@ public class ComposantTexte extends StackPane {
     
     protected final Rectangle rectangle;
     protected final Text texte;
+    protected final String texteParDefaut;
     
-    public ComposantTexte(String str, int x, int y, int largeur, int hauteur) {
+    public ComposantTexte(String texteParDefaut, int x, int y, int largeur, int hauteur) {
         this.setLayoutX(x);
         this.setLayoutY(y);
+        
+        this.texteParDefaut = texteParDefaut;
         
         this.rectangle = new Rectangle(largeur, hauteur);
         this.rectangle.setFill(Color.WHITE);
         
         this.rectangle.setStroke(Color.BLACK);
-        this.texte = new Text(str);
+        this.texte = new Text(texteParDefaut);
         
         this.texte.setFill(Color.BLACK);
         this.texte.setFont(new Font("Roboto", 18));

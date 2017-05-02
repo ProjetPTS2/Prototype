@@ -26,7 +26,7 @@ import javafx.stage.Stage;
 import pts2.EDT;
 import pts2.composants.ComposantEDT;
 import pts2.composants.ComposantSemaines;
-import pts2.composants.ComposantSurvol;
+import pts2.ihm.edition.AjouterCoursController;
 
 /**
  * FXML Controller class
@@ -72,6 +72,10 @@ public class AccueilController implements IFenetre, Initializable {
         this.composantEDT.initaliserEDT(EDT.getInstance().getBDD().getSemaine(Calendar.getInstance().get(Calendar.WEEK_OF_YEAR)));
         this.composantSemaines.initialiserComposants(this.composantEDT);
     }
+    
+    public ComposantEDT getComposantEDT() {
+        return this.composantEDT;
+    }
 
     @Override
     public Parent getRacine() {
@@ -115,6 +119,11 @@ public class AccueilController implements IFenetre, Initializable {
     
     public void menuBar_fichier_sauvegarder() {
         EDT.getInstance().getBDD().sauvegarder();
+    }
+    
+    
+    public void menuBar_edtion_ajouterCours() {
+        EDT.getInstance().afficherFenetre(new AjouterCoursController());
     }
     
     

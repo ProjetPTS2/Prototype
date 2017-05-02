@@ -36,6 +36,10 @@ public class XMLObjet {
         this.sousCategories.add(objet);
     }
     
+    public void ajouterValeur(XMLValeur xmlValeur) {
+        this.ajouterValeur(xmlValeur.getNom(), xmlValeur.getValeur());
+    }
+    
     /**
      * Ajoute une valeur à l'objet.
      * @param nomValeur Le nom de la valeur.

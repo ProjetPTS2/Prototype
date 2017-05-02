@@ -29,6 +29,11 @@ public class ComposantEDT extends Pane {
     private ComposantSurvol texteSurvol;
     private Semaine semaineActuelle;
     
+    private ComposantHeure coursTemporaire;
+    private ComposantHeure coursEnDeplacement;
+    
+    private double sourisX, sourisY;
+    
     public ComposantEDT(Node parent) {
         this.scrollPane = (ScrollPane)parent;
         this.edtCours = new Group();
@@ -40,9 +45,11 @@ public class ComposantEDT extends Pane {
         this.setOnMouseMoved(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
+                sourisX = event.getSceneX();
+                sourisY = event.getSceneY();
                 texteSurvol.actualiserPosition(scrollPane, ComposantEDT.this, event.getSceneX(), event.getSceneY() - parent.getLayoutY());
+                deplacementCours(event);
             }
-            
         });
     }
     
@@ -95,13 +102,68 @@ public class ComposantEDT extends Pane {
         
         // AFFICHAGE DES COURS
         for(Cours cours : semaine.getListeCours()) {
-                ComposantHeure coursComposant = new ComposantHeure(cours, "", (cours.getHeure().getHeure()-Constantes.HEURE_DEBUT) * Constantes.LARGEUR_HEURES + Constantes.LARGEUR_JOURS + Constantes.MARGE_HORIZONTAL, cours.getJours().getNumero() * Constantes.HAUTEUR_JOURS + Constantes.HAUTEUR_HEURES + Constantes.MARGE_VERTICAL);
-                coursComposant.setTexte(cours.getMatiere().getDiminutif() + " - " + cours.getTypeCours());
+                ComposantHeure coursComposant = new ComposantHeure(this, semaine, cours, cours.getMatiere().getDiminutif() + " - " + cours.getTypeCours(), (cours.getHeure().getHeure()-Constantes.HEURE_DEBUT) * Constantes.LARGEUR_HEURES + Constantes.LARGEUR_JOURS + Constantes.MARGE_HORIZONTAL, cours.getJours().getNumero() * Constantes.HAUTEUR_JOURS + Constantes.HAUTEUR_HEURES + Constantes.MARGE_VERTICAL);
                 coursComposant.initialiserEvents(this.getScene(), this.scrollPane, this.texteSurvol);
                 this.edtCours.getChildren().add(coursComposant);
         }
         this.texteSurvol.toFront();
     }
+    
+    
+    
+    
+    
+    
+    // DRAG & DROP
+    
+    public void ajouterCoursTemporaire(Cours cours) {
+        this.coursTemporaire = new ComposantHeure(this, this.semaineActuelle, cours, "Test", (int)sourisX, (int)sourisY);
+        this.coursTemporaire.initialiserEvents(this.getScene(), this.scrollPane, this.texteSurvol);
+        this.coursTemporaire.setDecalage(false);
+        this.setCoursEnDeplacement(this.coursTemporaire);
+        this.edtCours.getChildren().add(this.coursTemporaire);
+        this.setCoursEnDeplacement(this.coursTemporaire);
+    }
+    
+    public void setCoursEnDeplacement(ComposantHeure composant) {
+        if(this.coursEnDeplacement == null)
+            this.coursEnDeplacement = composant;
+    }
+    
+    public void placerCours(MouseEvent event) {
+        if(this.coursEnDeplacement != null) {
+            this.coursEnDeplacement.placer(event);
+            if(this.coursEnDeplacement.equals(this.coursTemporaire)) {
+                this.semaineActuelle.ajouterCours(this.coursTemporaire.getCours());
+                this.coursTemporaire.setDecalage(true);
+                this.coursTemporaire = null;
+            }
+            this.coursEnDeplacement = null;
+        }
+        event.consume();
+    }
+    
+    private void deplacementCours(MouseEvent event) {
+        if(this.coursEnDeplacement != null) {
+            this.coursEnDeplacement.deplacement(event, this.scrollPane);
+        }
+        
+        event.consume();
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     private String convertirMoisCalendarEnString(int idMois) {
         String mois;

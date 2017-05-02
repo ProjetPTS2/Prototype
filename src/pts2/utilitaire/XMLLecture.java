@@ -7,6 +7,9 @@ package pts2.utilitaire;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Scanner;
 import java.util.Stack;
 import java.util.logging.Level;
@@ -44,16 +47,21 @@ public class XMLLecture {
         while(this.reader.hasNextLine()) {
             String ligne = this.reader.nextLine();
             Matcher matcherCategorie = Pattern.compile("<([^<>]+)>").matcher(ligne);
-            Matcher matcherValeur = Pattern.compile("<([^<>]+)>([^<>]+)</\\1>").matcher(ligne);
             
-            String nom = null, valeur = null;
+            String nom = "";
+            XMLValeur valeur = null;
             boolean finCategorie = false;
-            
-            if(matcherValeur.find()) {
-                nom = matcherValeur.group(1);
-                valeur = matcherValeur.group(0);
-                valeur = valeur.replace(nom, "").replace("<", "").replace(">", "").replace("/", "");
-                //System.out.println("Valeur: " + nom);
+            ligne = ligne.replaceAll("\t", "");
+            if(ligne.startsWith("<Valeur")) {
+                String _valeur = "";
+                int index = ligne.indexOf("nom")+5;
+                while(ligne.charAt(index) != '"')
+                    nom += ligne.charAt(index++);
+                
+                index = ligne.indexOf("valeur")+8;
+                while(ligne.charAt(index) != '"')
+                    _valeur += ligne.charAt(index++);
+                valeur = new XMLValeur(nom, _valeur);
             } else if(matcherCategorie.find()) {
                 nom = matcherCategorie.group(0);
                 if(nom.charAt(1) != '/') {
@@ -77,7 +85,7 @@ public class XMLLecture {
                 }
                 else {
                     if(!objets.isEmpty())
-                        objets.peek().ajouterValeur(nom, valeur);
+                        objets.peek().ajouterValeur(valeur);
                 }
             } else
                 this.objetFinal = objets.pop();
