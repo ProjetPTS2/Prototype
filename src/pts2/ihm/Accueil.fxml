@@ -27,11 +27,11 @@
             </Lighting>
           </effect>
         </Rectangle>
-        <Text disable="false" fill="WHITE" focusTraversable="false" fontSmoothingType="GRAY" layoutX="194.0" layoutY="52.0" smooth="true" strikethrough="false" strokeType="OUTSIDE" strokeWidth="0.0" text="R3G15 Prototype" underline="false">
+        <Text disable="false" fill="WHITE" focusTraversable="false" fontSmoothingType="GRAY" layoutX="195.0" layoutY="53.0" smooth="true" strikethrough="false" strokeType="OUTSIDE" strokeWidth="0.0" text="R3G15 Prototype" underline="false">
           <effect>
             <Reflection topOffset="-10.0">
               <input>
-                <Glow level="0.9477987421383647" />
+                <Glow level="0.740251572327044" />
               </input>
             </Reflection>
           </effect>

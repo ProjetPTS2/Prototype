@@ -6,7 +6,8 @@
 package pts2.donnees;
 
 import java.util.ArrayList;
-import pts2.BDD;
+import pts2.EDT;
+import pts2.bdd.BDD;
 import pts2.utilitaire.ISauvegarde;
 import pts2.utilitaire.XMLEcriture;
 import pts2.utilitaire.XMLObjet;
@@ -76,15 +77,14 @@ public class Enseignant implements ISauvegarde {
         xml.fermerBalise();
     }
 
-    @Override
-    public void charger(XMLObjet xml, BDD bdd) {
+    public void charger(XMLObjet xml) {
         this.nom = xml.getPremiereValeur("Nom");
         this.prenom = xml.getPremiereValeur("Prenom");
         this.diminutif = prenom.charAt(0) + "" +  nom.charAt(0) + "" + nom.toLowerCase().charAt(1);
         
         for(XMLObjet matiere : xml.getSousCategories().get(0).getSousCategories()) {
             String nomMatiere = matiere.getPremiereValeur("Diminutif");
-            this.listeMatieres.add(bdd.getMatiere(nomMatiere));
+            this.listeMatieres.add(EDT.getInstance().getBDD().getBaseMatieres().rechercher(nomMatiere));
         }
     }
 }

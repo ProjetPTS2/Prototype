@@ -20,12 +20,13 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import pts2.EDT;
-import pts2.Jours;
+import pts2.donnees.Jours;
 import pts2.donnees.Cours;
 import pts2.donnees.Enseignant;
 import pts2.donnees.HeureEDT;
 import pts2.donnees.Matiere;
 import pts2.donnees.Salle;
+import pts2.donnees.TypeCours;
 import pts2.ihm.AccueilController;
 import pts2.ihm.IFenetre;
 
@@ -73,13 +74,13 @@ public class AjouterCoursController implements IFenetre, Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         List<String> liste = new ArrayList<>();
-        for(Matiere _matiere : EDT.getInstance().getBDD().getListeMatieres()) {
+        for(Matiere _matiere : EDT.getInstance().getBDD().getBaseMatieres().getListeDonnees()) {
             liste.add(_matiere.getDiminutif());
         }
         this.matiere.setItems(FXCollections.observableList(liste));
         
         liste = new ArrayList<>();
-        for(Salle _salle : EDT.getInstance().getBDD().getListeSalles()) {
+        for(Salle _salle : EDT.getInstance().getBDD().getBaseSalles().getListeDonnees()) {
             liste.add(_salle.getNom());
         }
         this.salle.setItems(FXCollections.observableList(liste));
@@ -87,15 +88,15 @@ public class AjouterCoursController implements IFenetre, Initializable {
         
         
         liste = new ArrayList<>();
-        for(Enseignant _enseignant : EDT.getInstance().getBDD().getListeEnseignants()) {
+        for(Enseignant _enseignant : EDT.getInstance().getBDD().getBaseEnseignants().getListeDonnees()) {
             liste.add(_enseignant.getDiminutif());
         }
         this.enseignant.setItems(FXCollections.observableList(liste));
         
         
         liste = new ArrayList<>();
-        for(String _typeCours : EDT.getInstance().getBDD().getListeTypeCours()) {
-            liste.add(_typeCours);
+        for(TypeCours _typeCours : EDT.getInstance().getBDD().getBaseTypeCours().getListeDonnees()) {
+            liste.add(_typeCours.getNom());
         }
         this.typeCours.setItems(FXCollections.observableList(liste));
         
@@ -112,12 +113,13 @@ public class AjouterCoursController implements IFenetre, Initializable {
     
     
     public void placerCours() {
-        Enseignant _enseignant = EDT.getInstance().getBDD().getEnseignant((String)this.enseignant.getSelectionModel().getSelectedItem());
-        Matiere _matiere = EDT.getInstance().getBDD().getMatiere((String)this.matiere.getSelectionModel().getSelectedItem());
-        Salle _salle = EDT.getInstance().getBDD().getSalle((String)this.salle.getSelectionModel().getSelectedItem());
-        String _typeCours = (String)this.typeCours.getSelectionModel().getSelectedItem();
+        Enseignant _enseignant = EDT.getInstance().getBDD().getBaseEnseignants().rechercher((String)this.enseignant.getSelectionModel().getSelectedItem());
+        Matiere _matiere = EDT.getInstance().getBDD().getBaseMatieres().rechercher((String)this.matiere.getSelectionModel().getSelectedItem());
+        Salle _salle = EDT.getInstance().getBDD().getBaseSalles().rechercher((String)this.salle.getSelectionModel().getSelectedItem());
+        TypeCours _typeCours = EDT.getInstance().getBDD().getBaseTypeCours().rechercher((String)this.typeCours.getSelectionModel().getSelectedItem());
+        int _duree = Integer.parseInt(dureeTexte.getText());
         
-        Cours cours = new Cours(Jours.LUNDI, new HeureEDT(8, 0, 60), _enseignant, _matiere, _salle, _typeCours);
+        Cours cours = new Cours(Jours.LUNDI, new HeureEDT(8, 0, _duree), _enseignant, _matiere, _salle, _typeCours);
         this.accueilController.getComposantEDT().ajouterCoursTemporaire(cours);
         this.stage.close();
     }

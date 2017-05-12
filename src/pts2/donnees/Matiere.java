@@ -1,7 +1,7 @@
 package pts2.donnees;
 
 import javafx.scene.paint.Color;
-import pts2.BDD;
+import pts2.bdd.BDD;
 import pts2.utilitaire.ISauvegarde;
 import pts2.utilitaire.XMLEcriture;
 import pts2.utilitaire.XMLObjet;
@@ -54,7 +54,7 @@ public class Matiere implements ISauvegarde {
     }
 
     @Override
-    public void charger(XMLObjet xml, BDD bdd) {
+    public void charger(XMLObjet xml) {
         this.diminutif = xml.getPremiereValeur("Diminutif");
         this.nom = xml.getPremiereValeur("Nom");
         String[] clr = xml.getPremiereValeur("Couleur").split(";");

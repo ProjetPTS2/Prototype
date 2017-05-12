@@ -85,7 +85,7 @@ public class EditerSallesController implements Initializable, IFenetre{
         this.editerSalles_choixSalle.valueProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue ov, String ancienneValeur, String nouvelleValeur) {
-                Salle salle = EDT.getInstance().getBDD().getSalle(nouvelleValeur);
+                Salle salle = EDT.getInstance().getBDD().getBaseSalles().rechercher(nouvelleValeur);
                 if(salle != null) {
                     editerSalles_nomSalle.setText(salle.getNom());
                     editerSalles_capacite.setText(salle.getCapacite() + "");
@@ -103,7 +103,7 @@ public class EditerSallesController implements Initializable, IFenetre{
     private void changementTab(int index) {
         if(tab.getTabPane().getSelectionModel().isSelected(1)) {
             List<String> listeNomsSalles = new ArrayList<>();
-            for(Salle salle : EDT.getInstance().getBDD().getListeSalles())
+            for(Salle salle : EDT.getInstance().getBDD().getBaseSalles().getListeDonnees())
                 listeNomsSalles.add(salle.getNom());
             this.editerSalles_choixSalle.setItems(FXCollections.observableList(listeNomsSalles));
             this.editerSalles_choixSalle.getSelectionModel().select(index);
@@ -115,7 +115,7 @@ public class EditerSallesController implements Initializable, IFenetre{
         if(this.ajouterSalle_nomSalle.getText().equals("") || this.ajouterSalle_capacite.getText().equals("")){
             this.ajouterSalle_resultat.setText("Veuillez remplir les champs.");
             this.ajouterSalle_resultat.setTextFill(Color.RED);
-        } else if(!EDT.getInstance().getBDD().ajouterSalle(new Salle(this.ajouterSalle_nomSalle.getText(), Integer.parseInt(this.ajouterSalle_capacite.getText())))) {
+        } else if(!EDT.getInstance().getBDD().getBaseSalles().ajouter(new Salle(this.ajouterSalle_nomSalle.getText(), Integer.parseInt(this.ajouterSalle_capacite.getText())))) {
             this.ajouterSalle_resultat.setText("Ce nom de salle est déjà utilisé.");
             this.ajouterSalle_resultat.setTextFill(Color.RED);
         } else {
@@ -127,7 +127,7 @@ public class EditerSallesController implements Initializable, IFenetre{
     }
     
     public void editerSalles_sauvegarde() {
-        Salle salle = EDT.getInstance().getBDD().getSalle((String)this.editerSalles_choixSalle.getSelectionModel().getSelectedItem());
+        Salle salle = EDT.getInstance().getBDD().getBaseSalles().rechercher((String)this.editerSalles_choixSalle.getSelectionModel().getSelectedItem());
         salle.setNom(this.editerSalles_nomSalle.getText());
         salle.setCapacite(Integer.parseInt(this.editerSalles_capacite.getText()));
         this.editerSalles_resultat.setTextFill(Color.GREEN);

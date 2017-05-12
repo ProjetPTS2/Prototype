@@ -85,7 +85,7 @@ public class EditerMatieresController implements IFenetre, Initializable {
     
     public void actualiserListeMatieres(int index) {
         List<String> listeNomsMatieres = new ArrayList<>();
-        for(Matiere matiere : EDT.getInstance().getBDD().getListeMatieres())
+        for(Matiere matiere : EDT.getInstance().getBDD().getBaseMatieres().getListeDonnees())
             listeNomsMatieres.add(matiere.getDiminutif());
         this.choixMatiere.setItems(FXCollections.observableList(listeNomsMatieres));
         this.choixMatiere.getSelectionModel().select(index);
@@ -97,7 +97,7 @@ public class EditerMatieresController implements IFenetre, Initializable {
         this.choixMatiere.valueProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue ov, String ancienneValeur, String nouvelleValeur) {
-                Matiere matiere = EDT.getInstance().getBDD().getMatiere(nouvelleValeur);
+                Matiere matiere = EDT.getInstance().getBDD().getBaseMatieres().rechercher(nouvelleValeur);
                 if(matiere != null) {
                     editerDiminutifMatiere.setText(matiere.getDiminutif());
                     editerNomMatiere.setText(matiere.getNom());
@@ -114,7 +114,7 @@ public class EditerMatieresController implements IFenetre, Initializable {
     
     
     public void ajouterMatiere() {
-        if(EDT.getInstance().getBDD().ajouterMatiere(new Matiere(this.ajouterDiminutifMatiere.getText(), this.ajouterNomMatiere.getText(), this.ajouterCouleurMatiere.getValue()))) {
+        if(EDT.getInstance().getBDD().getBaseMatieres().ajouter(new Matiere(this.ajouterDiminutifMatiere.getText(), this.ajouterNomMatiere.getText(), this.ajouterCouleurMatiere.getValue()))) {
             this.ajouterDiminutifMatiere.setText("");
             this.ajouterNomMatiere.setText("");
             this.ajouterCouleurMatiere.setValue(Color.WHITE);
@@ -123,7 +123,7 @@ public class EditerMatieresController implements IFenetre, Initializable {
     }
     
     public void sauvegarderMatiere() {
-        Matiere matiere = EDT.getInstance().getBDD().getMatiere((String)this.choixMatiere.getSelectionModel().getSelectedItem());
+        Matiere matiere = EDT.getInstance().getBDD().getBaseMatieres().rechercher((String)this.choixMatiere.getSelectionModel().getSelectedItem());
         matiere.setDiminutif(this.editerDiminutifMatiere.getText());
         matiere.setNom(this.editerNomMatiere.getText());
         matiere.setCouleur(this.editerCouleurMatiere.getValue());

@@ -14,7 +14,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import pts2.Constantes;
 import pts2.EDT;
-import pts2.Jours;
+import pts2.donnees.Jours;
 import pts2.donnees.Cours;
 import pts2.donnees.Semaine;
 
@@ -41,8 +41,7 @@ public class ComposantEDT extends Pane {
         this.texteSurvol.setVisible(false);
         this.getChildren().add(this.texteSurvol);
         
-        
-        this.setOnMouseMoved(new EventHandler<MouseEvent>() {
+        EventHandler<MouseEvent> gestionSouris = new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
                 sourisX = event.getSceneX();
@@ -50,7 +49,11 @@ public class ComposantEDT extends Pane {
                 texteSurvol.actualiserPosition(scrollPane, ComposantEDT.this, event.getSceneX(), event.getSceneY() - parent.getLayoutY());
                 deplacementCours(event);
             }
-        });
+        };
+        
+        
+        this.setOnMouseMoved(gestionSouris);
+        this.setOnMouseDragged(gestionSouris);
     }
     
     public void initaliserEDT(Semaine semaine) {
@@ -90,7 +93,7 @@ public class ComposantEDT extends Pane {
         if(!actualiserSemaine)
             this.actualiser(this.semaineActuelle);
         else
-            this.actualiser(EDT.getInstance().getBDD().getSemaine(this.semaineActuelle.getNoSemaine()));
+            this.actualiser(EDT.getInstance().getBDD().getBaseSemaines().rechercher(this.semaineActuelle.getNoSemaine()));
     }
     
     public void actualiser(Semaine semaine) {
@@ -102,7 +105,7 @@ public class ComposantEDT extends Pane {
         
         // AFFICHAGE DES COURS
         for(Cours cours : semaine.getListeCours()) {
-                ComposantHeure coursComposant = new ComposantHeure(this, semaine, cours, cours.getMatiere().getDiminutif() + " - " + cours.getTypeCours(), (cours.getHeure().getHeure()-Constantes.HEURE_DEBUT) * Constantes.LARGEUR_HEURES + Constantes.LARGEUR_JOURS + Constantes.MARGE_HORIZONTAL, cours.getJours().getNumero() * Constantes.HAUTEUR_JOURS + Constantes.HAUTEUR_HEURES + Constantes.MARGE_VERTICAL);
+                ComposantHeure coursComposant = new ComposantHeure(this, semaine, cours, (cours.getHeure().getHeure()-Constantes.HEURE_DEBUT) * Constantes.LARGEUR_HEURES + Constantes.LARGEUR_JOURS + Constantes.MARGE_HORIZONTAL, cours.getJours().getNumero() * Constantes.HAUTEUR_JOURS + Constantes.HAUTEUR_HEURES + Constantes.MARGE_VERTICAL);
                 coursComposant.initialiserEvents(this.getScene(), this.scrollPane, this.texteSurvol);
                 this.edtCours.getChildren().add(coursComposant);
         }
@@ -117,9 +120,8 @@ public class ComposantEDT extends Pane {
     // DRAG & DROP
     
     public void ajouterCoursTemporaire(Cours cours) {
-        this.coursTemporaire = new ComposantHeure(this, this.semaineActuelle, cours, "Test", (int)sourisX, (int)sourisY);
+        this.coursTemporaire = new ComposantHeure(this, this.semaineActuelle, cours, (int)sourisX, (int)sourisY);
         this.coursTemporaire.initialiserEvents(this.getScene(), this.scrollPane, this.texteSurvol);
-        this.coursTemporaire.setDecalage(false);
         this.setCoursEnDeplacement(this.coursTemporaire);
         this.edtCours.getChildren().add(this.coursTemporaire);
         this.setCoursEnDeplacement(this.coursTemporaire);
@@ -132,10 +134,12 @@ public class ComposantEDT extends Pane {
     
     public void placerCours(MouseEvent event) {
         if(this.coursEnDeplacement != null) {
-            this.coursEnDeplacement.placer(event);
+            boolean succes = this.coursEnDeplacement.placer(event);
             if(this.coursEnDeplacement.equals(this.coursTemporaire)) {
-                this.semaineActuelle.ajouterCours(this.coursTemporaire.getCours());
-                this.coursTemporaire.setDecalage(true);
+                if(!succes)
+                    this.edtCours.getChildren().remove(this.coursEnDeplacement);
+                else
+                    this.semaineActuelle.ajouterCours(this.coursTemporaire.getCours());
                 this.coursTemporaire = null;
             }
             this.coursEnDeplacement = null;
@@ -145,7 +149,7 @@ public class ComposantEDT extends Pane {
     
     private void deplacementCours(MouseEvent event) {
         if(this.coursEnDeplacement != null) {
-            this.coursEnDeplacement.deplacement(event, this.scrollPane);
+            this.coursEnDeplacement.deplacement(sourisX, sourisY, this.scrollPane);
         }
         
         event.consume();

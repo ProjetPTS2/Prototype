@@ -40,7 +40,7 @@ public class ComposantSemaines extends HBox {
             btn.setOnAction(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent event) {
-                    edt.actualiser(EDT.getInstance().getBDD().getSemaine(noSemaine));
+                    edt.actualiser(EDT.getInstance().getBDD().getBaseSemaines().rechercher(noSemaine));
                     boutonSemaines[id].setDisable(true);
                     boutonSemaines[idSemaine].setDisable(false);
                     idSemaine = id;

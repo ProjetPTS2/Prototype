@@ -25,6 +25,7 @@ import pts2.donnees.Enseignant;
 import pts2.donnees.HeureEDT;
 import pts2.donnees.Matiere;
 import pts2.donnees.Salle;
+import pts2.donnees.TypeCours;
 import pts2.ihm.AccueilController;
 import pts2.ihm.IFenetre;
 
@@ -82,7 +83,7 @@ public class EditerCoursController implements IFenetre, Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         int index = 0, i = 0;
         List<String> liste = new ArrayList<>();
-        for(Matiere _matiere : EDT.getInstance().getBDD().getListeMatieres()) {
+        for(Matiere _matiere : EDT.getInstance().getBDD().getBaseMatieres().getListeDonnees()) {
             if(_matiere.getDiminutif().equals(this.cours.getMatiere().getDiminutif()))
                 index = i;
             liste.add(_matiere.getDiminutif());
@@ -94,7 +95,7 @@ public class EditerCoursController implements IFenetre, Initializable {
         
         index = 0; i = 0;
         liste = new ArrayList<>();
-        for(Salle _salle : EDT.getInstance().getBDD().getListeSalles()) {
+        for(Salle _salle : EDT.getInstance().getBDD().getBaseSalles().getListeDonnees()) {
             if(_salle.getNom().equals(this.cours.getSalle().getNom()))
                 index = i;
             liste.add(_salle.getNom());
@@ -107,7 +108,7 @@ public class EditerCoursController implements IFenetre, Initializable {
         
         index = 0; i = 0;
         liste = new ArrayList<>();
-        for(Enseignant _enseignant : EDT.getInstance().getBDD().getListeEnseignants()) {
+        for(Enseignant _enseignant : EDT.getInstance().getBDD().getBaseEnseignants().getListeDonnees()) {
             if(_enseignant.getDiminutif().equals(this.cours.getEnseignant().getDiminutif()))
                 index = i;
             liste.add(_enseignant.getDiminutif());
@@ -120,10 +121,10 @@ public class EditerCoursController implements IFenetre, Initializable {
         
         index = 0; i = 0;
         liste = new ArrayList<>();
-        for(String _typeCours : EDT.getInstance().getBDD().getListeTypeCours()) {
-            if(_typeCours.equals(this.cours.getTypeCours()))
+        for(TypeCours _typeCours : EDT.getInstance().getBDD().getBaseTypeCours().getListeDonnees()) {
+            if(_typeCours.getNom().equals(this.cours.getTypeCours().getNom()))
                 index = i;
-            liste.add(_typeCours);
+            liste.add(_typeCours.getNom());
             i++;
         }
         this.typeCours.setItems(FXCollections.observableList(liste));
@@ -155,14 +156,16 @@ public class EditerCoursController implements IFenetre, Initializable {
     
     
     public void sauvegarder() {
-        this.cours.setSalle(EDT.getInstance().getBDD().getSalle((String)this.salle.getSelectionModel().getSelectedItem()));
-        this.cours.setMatiere(EDT.getInstance().getBDD().getMatiere((String)this.matiere.getSelectionModel().getSelectedItem()));
-        this.cours.setEnseignant(EDT.getInstance().getBDD().getEnseignant((String)this.enseignant.getSelectionModel().getSelectedItem()));
-        this.cours.setTypeCours((String)this.typeCours.getSelectionModel().getSelectedItem());
+        this.cours.setSalle(EDT.getInstance().getBDD().getBaseSalles().rechercher((String)this.salle.getSelectionModel().getSelectedItem()));
+        this.cours.setMatiere(EDT.getInstance().getBDD().getBaseMatieres().rechercher((String)this.matiere.getSelectionModel().getSelectedItem()));
+        this.cours.setEnseignant(EDT.getInstance().getBDD().getBaseEnseignants().rechercher((String)this.enseignant.getSelectionModel().getSelectedItem()));
+        this.cours.setTypeCours(EDT.getInstance().getBDD().getBaseTypeCours().rechercher((String)this.typeCours.getSelectionModel().getSelectedItem()));
         
         this.heure.setHeure(Integer.parseInt(this.heureTexte.getText()));
         this.heure.setMinute(Integer.parseInt(this.minuteTexte.getText()));
         this.heure.setDuree(Integer.parseInt(this.dureeTexte.getText()));
+        
+        this.cours.setHeure(this.heure);
         
         
         this.accueilController.actualiser();

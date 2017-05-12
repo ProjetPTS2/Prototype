@@ -21,6 +21,7 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import pts2.EDT;
@@ -68,8 +69,7 @@ public class AccueilController implements IFenetre, Initializable {
              loader.setController(this);
              this.racine = loader.load();
         } catch(IOException e) {}          
-         
-        this.composantEDT.initaliserEDT(EDT.getInstance().getBDD().getSemaine(Calendar.getInstance().get(Calendar.WEEK_OF_YEAR)));
+        this.composantEDT.initaliserEDT(EDT.getInstance().getBDD().getBaseSemaines().rechercher(Calendar.getInstance().get(Calendar.WEEK_OF_YEAR)));
         this.composantSemaines.initialiserComposants(this.composantEDT);
     }
     
@@ -110,10 +110,9 @@ public class AccueilController implements IFenetre, Initializable {
     }
     
     public void menuBar_fichier_ouvrir() {
-        FileChooser fileChooser = new FileChooser();
+        DirectoryChooser fileChooser = new DirectoryChooser();
         fileChooser.setTitle("Charger un emploi du temps");
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Fichier XML", "*.xml"));
-        File fichier = fileChooser.showOpenDialog(this.stage);
+        File fichier = fileChooser.showDialog(this.stage);
         EDT.getInstance().chargerEDT(fichier);
     }
     
@@ -138,7 +137,7 @@ public class AccueilController implements IFenetre, Initializable {
     
     
     public void menuBar_edition_snap_1() {
-        this.setSnap(0);
+        this.setSnap(1);
     }
     public void menuBar_edition_snap_5() {
         this.setSnap(5);        

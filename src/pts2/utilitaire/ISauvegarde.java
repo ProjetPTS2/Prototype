@@ -5,7 +5,7 @@
  */
 package pts2.utilitaire;
 
-import pts2.BDD;
+import pts2.bdd.BDD;
 
 /**
  *
@@ -22,7 +22,6 @@ public interface ISauvegarde {
     /**
      * Permet de charger une classe à partir d'un fichier XML.
      * @param xml L'objet XML à charger.
-     * @param bdd La base de données.
      */
-    public void charger(XMLObjet xml, BDD bdd);
+    public void charger(XMLObjet xml);
 }

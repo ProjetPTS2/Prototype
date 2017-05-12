@@ -15,7 +15,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import pts2.Constantes;
 import pts2.EDT;
-import pts2.Jours;
+import pts2.donnees.Jours;
 import pts2.donnees.Cours;
 import pts2.donnees.HeureEDT;
 import pts2.donnees.Semaine;
@@ -38,12 +38,11 @@ public class ComposantHeure extends ComposantTexte {
     private Jours joursPlacement;
     private HeureEDT heurePlacement;
     private boolean placementInvalide, placementEnCours;
-    private boolean activerDecalage;
     private double decalageX; // Position de la souris dans le composant lors du drag & drop
     private double anciennePositionX, anciennePositionY;
     
-    public ComposantHeure(ComposantEDT edt, Semaine semaine, Cours cours, String str, int x, int y) {
-        super(str, x + Constantes.LARGEUR_HEURES*cours.getHeure().getMinute()/60, y, Constantes.LARGEUR_HEURES, Constantes.HAUTEUR_JOURS);
+    public ComposantHeure(ComposantEDT edt, Semaine semaine, Cours cours, int x, int y) {
+        super(cours.getMatiere().getDiminutif() + " - " + cours.getTypeCours().getNom(), x + Constantes.LARGEUR_HEURES*cours.getHeure().getMinute()/60, y, Constantes.LARGEUR_HEURES, Constantes.HAUTEUR_JOURS);
         this.edt = edt;
         this.semaine = semaine;
         this.heure = cours.getHeure();
@@ -56,7 +55,6 @@ public class ComposantHeure extends ComposantTexte {
         this.texte.setFill(Color.WHITE);
         
         this.sourisSurvol = false;
-        this.activerDecalage = true;
     }
     
     public void initialiserEvents(Scene scene, Node parent, ComposantSurvol survol) {
@@ -67,7 +65,7 @@ public class ComposantHeure extends ComposantTexte {
                     setCouleurFond(cours.getMatiere().getCouleur().interpolate(Color.WHITE, 0.2));
                 scene.setCursor(Cursor.HAND);
                 survol.setTexte(cours.getMatiere().getNom() + 
-                        "\nType: " + cours.getTypeCours() + 
+                        "\nType: " + cours.getTypeCours().getNom() + 
                         "\nSalle: " + cours.getSalle().getNom() +
                         "\nEnseignant: " + cours.getEnseignant().toString() +
                         "\n" + heure.getHeureDebutString() + " - " + heure.getHeureFinString());
@@ -79,8 +77,14 @@ public class ComposantHeure extends ComposantTexte {
         
         this.setOnMouseMoved(new EventHandler<MouseEvent>() {
             public void handle(MouseEvent event) {
-                if(sourisSurvol)
+                if(sourisSurvol) {
+                    survol.setTexte(cours.getMatiere().getNom() + 
+                        "\nType: " + cours.getTypeCours().getNom() + 
+                        "\nSalle: " + cours.getSalle().getNom() +
+                        "\nEnseignant: " + cours.getEnseignant().toString() +
+                        "\n" + heure.getHeureDebutString() + " - " + heure.getHeureFinString());
                     survol.setVisible(true);
+                }
             }
         });
         
@@ -106,7 +110,7 @@ public class ComposantHeure extends ComposantTexte {
                         edt.placerCours(event);
                     
                 }
-                if(event.isSecondaryButtonDown())
+                if(event.isSecondaryButtonDown() && !placementEnCours)
                     EDT.getInstance().afficherFenetre(new EditerCoursController(cours, heure));
             }
         });
@@ -116,14 +120,9 @@ public class ComposantHeure extends ComposantTexte {
         return this.cours;
     }
     
-    public void setDecalage(boolean valeur) {
-        this.activerDecalage = valeur;
-    }
     
-    
-    public void placer(MouseEvent event) {
-        if(!event.isPrimaryButtonDown())
-            return;
+    public boolean placer(MouseEvent event) {
+        boolean retour = !placementInvalide;
         if(placementInvalide) {
             setLayoutX(anciennePositionX);
             setLayoutY(anciennePositionY);
@@ -131,18 +130,19 @@ public class ComposantHeure extends ComposantTexte {
             cours.setHeure(heurePlacement);
             texte.setText(texteParDefaut);
             placementInvalide = false;
+            sourisSurvol = false;
         }
         this.placementEnCours = false;
         setCouleurFond(cours.getMatiere().getCouleur());
+        return retour;
     }
     
     
-    public void deplacement(MouseEvent event, Node parent) {  
+    public void deplacement(double sourisX, double sourisY, Node parent) {  
         this.toFront();
 
-        int x = (int)(event.getSceneX() - parent.getLayoutX());
-        int y = (int)(event.getSceneY() - parent.getLayoutY());
-
+        int x = (int)(sourisX - parent.getLayoutX());
+        int y = (int)(sourisY - parent.getLayoutY());
 
         if(!placementEnCours) {
             joursPlacement = cours.getJours();
@@ -154,10 +154,7 @@ public class ComposantHeure extends ComposantTexte {
         }
 
         
-        if(this.activerDecalage)
-            x -= decalageX;
-        else
-            x -= 20;
+        x -= 20;
 
 
         // Ajout du décalage du ScrollPane

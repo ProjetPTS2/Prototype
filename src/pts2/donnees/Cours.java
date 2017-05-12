@@ -1,7 +1,7 @@
 package pts2.donnees;
 
-import pts2.BDD;
-import pts2.Jours;
+import pts2.EDT;
+import pts2.bdd.BDD;
 import pts2.utilitaire.ISauvegarde;
 import pts2.utilitaire.XMLEcriture;
 import pts2.utilitaire.XMLObjet;
@@ -9,12 +9,10 @@ import pts2.utilitaire.XMLObjet;
 
 public class Cours implements ISauvegarde {
     
-    // FAIRE SAUVEGARDER/CHARGE HEURE
-    
     private Jours jours;
     private HeureEDT heure;
     private Enseignant enseignant;
-    private String typeCours;
+    private TypeCours typeCours;
     private Matiere matiere;
     private Salle salle;
     
@@ -25,7 +23,7 @@ public class Cours implements ISauvegarde {
      * @param salle La salle de ce cours.
      * @param typeCours Le type de ce cours.
      */
-    public Cours(Jours jours, HeureEDT heure, Enseignant enseignant, Matiere matiere, Salle salle, String typeCours) {
+    public Cours(Jours jours, HeureEDT heure, Enseignant enseignant, Matiere matiere, Salle salle, TypeCours typeCours) {
         this.jours = jours;
         this.heure = heure;
         this.enseignant = enseignant;
@@ -46,7 +44,7 @@ public class Cours implements ISauvegarde {
         return this.enseignant;
     }
     
-    public String getTypeCours() {
+    public TypeCours getTypeCours() {
         return this.typeCours;
     }
     
@@ -64,14 +62,19 @@ public class Cours implements ISauvegarde {
     }
     
     public void setHeure(HeureEDT heure) {
-        this.heure = heure;
+        if(heure != null) {
+            this.heure.setHeure(heure.getHeure());
+            this.heure.setMinute(heure.getMinute());
+            this.heure.setDuree(heure.getDuree());
+        } else
+            this.heure = heure;
     }
     
     public void setEnseignant(Enseignant enseignant) {
         this.enseignant = enseignant;
     }
     
-    public void setTypeCours(String typeCours) {
+    public void setTypeCours(TypeCours typeCours) {
         this.typeCours = typeCours;
     }
     
@@ -88,7 +91,7 @@ public class Cours implements ISauvegarde {
     public void sauvegarder(XMLEcriture xml) {
         xml.ouvrirBalise("Cours");
         this.enseignant.sauvegarder(xml);
-        xml.ecrireValeur("TypeCours", this.typeCours);
+        this.typeCours.sauvegarder(xml);
         this.matiere.sauvegarder(xml);
         this.salle.sauvegarder(xml);
         this.heure.sauvegarder(xml);
@@ -98,16 +101,18 @@ public class Cours implements ISauvegarde {
 
     
     @Override
-    public void charger(XMLObjet xml, BDD bdd) {
+    public void charger(XMLObjet xml) {
+        BDD bdd = EDT.getInstance().getBDD();
         String diminutifEnseignant = xml.getSousCategories().get(0).getPremiereValeur("Diminutif");
-        this.enseignant = bdd.getEnseignant(diminutifEnseignant);
-        this.typeCours = xml.getPremiereValeur("TypeCours");
+        this.enseignant = bdd.getBaseEnseignants().rechercher(diminutifEnseignant);
         String diminutifMatiere = xml.getSousCategories().get(1).getPremiereValeur("Diminutif");
-        this.matiere = bdd.getMatiere(diminutifMatiere);
+        this.matiere = bdd.getBaseMatieres().rechercher(diminutifMatiere);
         String nomSalle = xml.getSousCategories().get(2).getPremiereValeur("Nom");
-        this.salle = bdd.getSalle(nomSalle);
+        this.salle = bdd.getBaseSalles().rechercher(nomSalle);
         this.heure = new HeureEDT(0, 0, 0);
-        this.heure.charger(xml.getSousCategories().get(3), bdd);
+        this.heure.charger(xml.getSousCategories().get(3));
         this.jours = Jours.values()[Integer.parseInt(xml.getPremiereValeur("Jours"))];
+        String typeCours = xml.getSousCategories().get(4).getPremiereValeur("TypeCours");
+        this.typeCours = bdd.getBaseTypeCours().rechercher(typeCours);
     }
 }

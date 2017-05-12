@@ -2,8 +2,8 @@ package pts2.donnees;
 
 import java.util.ArrayList;
 import java.util.List;
-import pts2.BDD;
-import pts2.Jours;
+import pts2.EDT;
+import pts2.bdd.BDD;
 import pts2.utilitaire.ISauvegarde;
 import pts2.utilitaire.XMLEcriture;
 import pts2.utilitaire.XMLObjet;
@@ -62,11 +62,11 @@ public class Semaine implements ISauvegarde {
     }
 
     @Override
-    public void charger(XMLObjet xml, BDD bdd) {
+    public void charger(XMLObjet xml) {
         this.noSemaine = Integer.parseInt(xml.getPremiereValeur("NoSemaine"));
         for(XMLObjet _cours : xml.getSousCategories()) {
             Cours cours = new Cours(null, null, null, null, null, null);
-            cours.charger(_cours, bdd);
+            cours.charger(_cours);
             this.listeCours.add(cours);
         }
     }

@@ -5,7 +5,7 @@
  */
 package pts2.donnees;
 
-import pts2.BDD;
+import pts2.bdd.BDD;
 import pts2.utilitaire.ISauvegarde;
 import pts2.utilitaire.XMLEcriture;
 import pts2.utilitaire.XMLObjet;
@@ -49,7 +49,7 @@ public class Salle implements ISauvegarde {
     }
 
     @Override
-    public void charger(XMLObjet xml, BDD bdd) {
+    public void charger(XMLObjet xml) {
         this.nom = xml.getPremiereValeur("Nom");
         this.capacite = Integer.parseInt(xml.getPremiereValeur("Capacite"));
     }

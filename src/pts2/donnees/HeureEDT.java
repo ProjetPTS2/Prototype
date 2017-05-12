@@ -5,7 +5,7 @@
  */
 package pts2.donnees;
 
-import pts2.BDD;
+import pts2.bdd.BDD;
 import pts2.utilitaire.ISauvegarde;
 import pts2.utilitaire.XMLEcriture;
 import pts2.utilitaire.XMLObjet;
@@ -106,7 +106,7 @@ public class HeureEDT implements ISauvegarde {
     }
 
     @Override
-    public void charger(XMLObjet xml, BDD bdd) {
+    public void charger(XMLObjet xml) {
         this.heure = Integer.parseInt(xml.getPremiereValeur("HeureDebut"));
         this.minute = Integer.parseInt(xml.getPremiereValeur("MinuteDebut"));
         this.duree = Integer.parseInt(xml.getPremiereValeur("Duree"));
