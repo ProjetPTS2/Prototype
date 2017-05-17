@@ -5,10 +5,8 @@
  */
 package pts2.donnees;
 
-import javafx.scene.paint.Color;
 import pts2.utilitaire.ISauvegarde;
 import pts2.utilitaire.XMLEcriture;
-import pts2.utilitaire.XMLLecture;
 import pts2.utilitaire.XMLObjet;
 
 /**

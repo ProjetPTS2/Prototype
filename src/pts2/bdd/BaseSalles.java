@@ -60,7 +60,7 @@ public class BaseSalles extends Base<Salle> {
         XMLLecture xml = new XMLLecture(this.getCheminAbsolue());
         xml.lire();
         XMLObjet semaines = xml.rechercherCategorie("Salles");
-        for(XMLObjet semaine : semaines.getSousCategories()) {
+        for(XMLObjet semaine : xml.getRacine().getSousCategories()) {
             Salle s = new Salle(null, 0);
             s.charger(semaine);
             System.out.println("[Salle] Ajout: " + s.getNom());

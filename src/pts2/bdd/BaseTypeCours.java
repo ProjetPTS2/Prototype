@@ -59,8 +59,7 @@ public class BaseTypeCours extends Base<TypeCours> {
     public void charger() {
         XMLLecture xml = new XMLLecture(this.getCheminAbsolue());
         xml.lire();
-        XMLObjet listeTypeCours = xml.rechercherCategorie("Salles");
-        for(XMLObjet typeCours : listeTypeCours.getSousCategories()) {
+        for(XMLObjet typeCours : xml.getRacine().getSousCategories()) {
             TypeCours s = new TypeCours(null);
             s.charger(typeCours);
             System.out.println("[TypeCours] Ajout: " + s.getNom());

@@ -64,7 +64,7 @@ public class BaseSemaines extends Base<Semaine> {
         XMLLecture xml = new XMLLecture(this.getCheminAbsolue());
         xml.lire();
         XMLObjet semaines = xml.rechercherCategorie("Semaines");
-        for(XMLObjet semaine : semaines.getSousCategories()) {
+        for(XMLObjet semaine : xml.getRacine().getSousCategories()) {
             Semaine s = new Semaine(-1);
             s.charger(semaine);
             System.out.println("[Semaine] Ajout: n°" + s.getNoSemaine());

@@ -32,16 +32,36 @@ public abstract class Base<T> {
         return true;
     }
     
+    
+    /**
+     * Rechercher un objet dans la base de données.
+     * @param o L'identificateur de l'objet (exemple: le nom d'une salle)
+     * @return Retourne l'objet trouvé, sinon null.
+     */
     public abstract T rechercher(Object o);
     
+    /**
+     * Vérifie si un objet existe dans la base.
+     * @param o L'identificateur de l'objet (exemple: le nom d'une salle)
+     * @return Retourne true si l'objet a été trouvé, false sinon.
+     */
     public boolean existe(Object o) {
         return this.rechercher(o) != null;
     }
     
+    /**
+     * Supprime un objet dans la base de données.
+     * @param e L'objet à supprimer.
+     * @return Retourne true si l'objet a bien été supprimé, false sinon.
+     */
     public boolean supprimer(T e) {
         return this.liste.remove(e);
     }
     
+    /**
+     * Renvoie toutes les données contenues dans la base.
+     * @return Renvoie toutes les données contenues dans la base.
+     */
     public List<T> getListeDonnees() {
         return this.liste;
     }

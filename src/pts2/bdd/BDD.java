@@ -138,7 +138,7 @@ public class BDD {
         this.getBaseEnseignants().charger();
         this.getBaseMatieres().charger();
         this.getBaseSalles().charger();
-        this.getBaseSemaines().charger();
         this.getBaseTypeCours().charger();
+        this.getBaseSemaines().charger();
     }
 }

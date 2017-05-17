@@ -91,10 +91,10 @@ public class Cours implements ISauvegarde {
     public void sauvegarder(XMLEcriture xml) {
         xml.ouvrirBalise("Cours");
         this.enseignant.sauvegarder(xml);
-        this.typeCours.sauvegarder(xml);
         this.matiere.sauvegarder(xml);
         this.salle.sauvegarder(xml);
         this.heure.sauvegarder(xml);
+        this.typeCours.sauvegarder(xml);
         xml.ecrireValeur("Jours", this.jours.getNumero()+"");
         xml.fermerBalise();
     }
@@ -112,7 +112,7 @@ public class Cours implements ISauvegarde {
         this.heure = new HeureEDT(0, 0, 0);
         this.heure.charger(xml.getSousCategories().get(3));
         this.jours = Jours.values()[Integer.parseInt(xml.getPremiereValeur("Jours"))];
-        String typeCours = xml.getSousCategories().get(4).getPremiereValeur("TypeCours");
+        String typeCours = xml.getSousCategories().get(4).getPremiereValeur("Nom");
         this.typeCours = bdd.getBaseTypeCours().rechercher(typeCours);
     }
 }

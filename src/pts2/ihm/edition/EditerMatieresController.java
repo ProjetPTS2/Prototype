@@ -127,6 +127,7 @@ public class EditerMatieresController implements IFenetre, Initializable {
         matiere.setDiminutif(this.editerDiminutifMatiere.getText());
         matiere.setNom(this.editerNomMatiere.getText());
         matiere.setCouleur(this.editerCouleurMatiere.getValue());
+        this.actualiserListeMatieres();
         this.accueilController.actualiser();
     }
 }

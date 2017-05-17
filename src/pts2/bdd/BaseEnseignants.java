@@ -62,8 +62,8 @@ public class BaseEnseignants extends Base<Enseignant> {
 
     public void charger() {
         XMLLecture xml = new XMLLecture(this.getCheminAbsolue());
-        XMLObjet enseignants = xml.rechercherCategorie("Enseignants");
-        for(XMLObjet enseignant : enseignants.getSousCategories()) {
+        xml.lire();
+        for(XMLObjet enseignant : xml.getRacine().getSousCategories()) {
             Enseignant e = new Enseignant(null, null);
             e.charger(enseignant);
             System.out.println("[Enseignant] Ajout: " + e.getNom() + " " + e.getPrenom());

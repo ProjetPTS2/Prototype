@@ -7,9 +7,6 @@ package pts2.utilitaire;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Scanner;
 import java.util.Stack;
 import java.util.logging.Level;
@@ -31,10 +28,15 @@ public class XMLLecture {
      * @param chemin Le chemin du fichier XML à charger.
      */
     public XMLLecture(String chemin) {
+        File fichier = new File(chemin);
+        if(!fichier.exists()) {
+            System.out.println("Le fichier " + chemin + " n'existe pas !");
+            return;
+        }
         try {
-            this.reader = new Scanner(new File(chemin));
+            this.reader = new Scanner(fichier);
         } catch (FileNotFoundException ex) {
-            Logger.getLogger(XMLLecture.class.getName()).log(Level.SEVERE, null, ex);
+            ex.printStackTrace();
         }
     }
     
@@ -110,5 +112,7 @@ public class XMLLecture {
         return objet;
     }
     
-    
+    public XMLObjet getRacine() {
+        return this.objetFinal;
+    }
 }

@@ -7,10 +7,7 @@ package pts2.bdd;
 
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import pts2.donnees.Matiere;
-import pts2.donnees.Salle;
 import pts2.utilitaire.XMLEcriture;
 import pts2.utilitaire.XMLLecture;
 import pts2.utilitaire.XMLObjet;
@@ -59,8 +56,7 @@ public class BaseMatieres extends Base<Matiere>{
     public void charger() {
         XMLLecture xml = new XMLLecture(this.getCheminAbsolue());
         xml.lire();
-        XMLObjet matieres = xml.rechercherCategorie("Matieres");
-        for(XMLObjet matiere : matieres.getSousCategories()) {
+        for(XMLObjet matiere : xml.getRacine().getSousCategories()) {
             Matiere m = new Matiere(null, null, null);
             m.charger(matiere);
             System.out.println("[Matiere] Ajout: " + m.getNom());
