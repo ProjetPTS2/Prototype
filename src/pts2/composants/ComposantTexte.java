@@ -38,8 +38,8 @@ public class ComposantTexte extends StackPane {
         this.texte.setFont(new Font("Roboto", 18));
         this.texte.setBoundsType(TextBoundsType.VISUAL);
         
-        this.getChildren().add(this.rectangle);
-        this.getChildren().add(this.texte);
+        super.getChildren().add(this.rectangle);
+        super.getChildren().add(this.texte);
     }
     
     public void setTexte(String str) {

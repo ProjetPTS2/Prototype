@@ -19,7 +19,6 @@ import pts2.bdd.BDD;
 import pts2.composants.ComposantEDT;
 import pts2.donnees.Cours;
 import pts2.donnees.Enseignant;
-import pts2.donnees.Creneau;
 import pts2.donnees.Matiere;
 import pts2.donnees.Salle;
 import pts2.donnees.TypeCours;
@@ -33,17 +32,15 @@ import pts2.ihm.Fenetre;
 public class EditerCoursController extends Fenetre implements Initializable {
     
     private final Cours cours;
-    private final Creneau heure;
     
     @FXML
     private ComboBox typeCours, enseignant, matiere, salle;
     @FXML
     private TextField heureTexte, minuteTexte, dureeTexte;
     
-    public EditerCoursController(BDD bdd, ComposantEDT edt, Cours cours, Creneau heure) {
+    public EditerCoursController(BDD bdd, ComposantEDT edt, Cours cours) {
         super("Editer un cours", "EditerCours.fxml", bdd, edt);
         this.cours = cours;
-        this.heure = heure;
         super.chargerIHM();
     }    
     
@@ -98,9 +95,9 @@ public class EditerCoursController extends Fenetre implements Initializable {
         this.typeCours.setItems(FXCollections.observableList(liste));
         this.typeCours.getSelectionModel().select(index);
         
-        this.heureTexte.setText(this.heure.getHeure() + "");
-        this.minuteTexte.setText(this.heure.getMinute() + "");
-        this.dureeTexte.setText(this.heure.getDuree() + "");
+        this.heureTexte.setText(this.cours.getCreneau().getHeure() + "");
+        this.minuteTexte.setText(this.cours.getCreneau().getMinute() + "");
+        this.dureeTexte.setText(this.cours.getCreneau().getDuree() + "");
         
         
         this.heureTexte.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
@@ -129,14 +126,12 @@ public class EditerCoursController extends Fenetre implements Initializable {
         this.cours.setEnseignant(this.bdd.getBaseEnseignants().rechercher((String)this.enseignant.getSelectionModel().getSelectedItem()));
         this.cours.setTypeCours(this.bdd.getBaseTypeCours().rechercher((String)this.typeCours.getSelectionModel().getSelectedItem()));
         
-        this.heure.setHeure(Integer.parseInt(this.heureTexte.getText()));
-        this.heure.setMinute(Integer.parseInt(this.minuteTexte.getText()));
-        this.heure.setDuree(Integer.parseInt(this.dureeTexte.getText()));
-        
-        this.cours.setCreneau(this.heure);
-        
+        this.cours.getCreneau().setHeure(Integer.parseInt(this.heureTexte.getText()));
+        this.cours.getCreneau().setMinute(Integer.parseInt(this.minuteTexte.getText()));
+        this.cours.getCreneau().setDuree(Integer.parseInt(this.dureeTexte.getText()));        
         
         this.composantEDT.actualiser();
+        this.stage.close();
     }
     
 }

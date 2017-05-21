@@ -27,6 +27,6 @@ public class ComposantCaseEDT extends StackPane {
         
         this.rectangle.setStroke(Color.BLACK);    
         
-        this.getChildren().add(this.rectangle);
+        super.getChildren().add(this.rectangle);
     }
 }

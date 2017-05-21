@@ -52,13 +52,14 @@ public class Cours implements ISauvegarde {
         return this.salle;
     }
     
-    public void setCreneau(Creneau heure) {
-        if(heure != null) {
-            this.creneau.setHeure(heure.getHeure());
-            this.creneau.setMinute(heure.getMinute());
-            this.creneau.setDuree(heure.getDuree());
+    public void setCreneau(Creneau creneau) {
+        if(creneau != null) {
+            this.creneau.setJours(creneau.getJours());
+            this.creneau.setHeure(creneau.getHeure());
+            this.creneau.setMinute(creneau.getMinute());
+            this.creneau.setDuree(creneau.getDuree());
         } else
-            this.creneau = heure;
+            this.creneau = creneau;
     }
     
     public void setEnseignant(Enseignant enseignant) {

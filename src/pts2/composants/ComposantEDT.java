@@ -24,10 +24,10 @@ import pts2.donnees.Semaine;
  */
 public class ComposantEDT extends Pane {
     
-    private BDD bdd;
+    private final BDD bdd;
     private ScrollPane scrollPane;
-    private Group edtCours;
-    private ComposantSurvol texteSurvol;
+    private final Group edtCours;
+    private ComposantTexteSurvol texteSurvol;
     private Semaine semaineActuelle;
     
     private ComposantHeure coursTemporaire;
@@ -39,9 +39,9 @@ public class ComposantEDT extends Pane {
         this.bdd = bdd;
         this.scrollPane = (ScrollPane)parent;
         this.edtCours = new Group();
-        this.texteSurvol = new ComposantSurvol();
+        this.texteSurvol = new ComposantTexteSurvol();
         this.texteSurvol.setVisible(false);
-        this.getChildren().add(this.texteSurvol);
+        super.getChildren().add(this.texteSurvol);
         
         EventHandler<MouseEvent> gestionSouris = new EventHandler<MouseEvent>() {
             @Override
@@ -105,13 +105,15 @@ public class ComposantEDT extends Pane {
         // AFFICHAGE DES COURS
         for(Cours cours : semaine.getListeCours()) {
                 ComposantHeure coursComposant = new ComposantHeure(this, semaine, cours, (cours.getCreneau().getHeure()-Constantes.HEURE_DEBUT) * Constantes.LARGEUR_HEURES + Constantes.LARGEUR_JOURS + Constantes.MARGE_HORIZONTAL, cours.getCreneau().getJours().getNumero() * Constantes.HAUTEUR_JOURS + Constantes.HAUTEUR_HEURES + Constantes.MARGE_VERTICAL);
-                coursComposant.initialiserEvents(this.getScene(), this.scrollPane, this.texteSurvol);
+                coursComposant.initialiserEvents(this.getScene(), this.scrollPane);
                 this.edtCours.getChildren().add(coursComposant);
         }
         this.texteSurvol.toFront();
     }
     
-    
+    public ComposantTexteSurvol getTexteSurvol() {
+        return this.texteSurvol;
+    }
     
     
     
@@ -120,7 +122,7 @@ public class ComposantEDT extends Pane {
     
     public void ajouterCoursTemporaire(Cours cours) {
         this.coursTemporaire = new ComposantHeure(this, this.semaineActuelle, cours, (int)sourisX, (int)sourisY);
-        this.coursTemporaire.initialiserEvents(this.getScene(), this.scrollPane, this.texteSurvol);
+        this.coursTemporaire.initialiserEvents(this.getScene(), this.scrollPane);
         this.setCoursEnDeplacement(this.coursTemporaire);
         this.edtCours.getChildren().add(this.coursTemporaire);
         this.setCoursEnDeplacement(this.coursTemporaire);
