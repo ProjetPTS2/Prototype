@@ -6,11 +6,13 @@
 package pts2.donnees;
 
 import java.util.ArrayList;
-import pts2.EDT;
+import java.util.HashMap;
+import java.util.Map;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 import pts2.bdd.BDD;
 import pts2.utilitaire.ISauvegarde;
-import pts2.utilitaire.XMLEcriture;
-import pts2.utilitaire.XMLObjet;
+import pts2.utilitaire.XMLSauvegarde;
 
 /**
  *
@@ -65,11 +67,12 @@ public class Enseignant implements ISauvegarde {
     }
 
     @Override
-    public void sauvegarder(XMLEcriture xml) {
-        xml.ouvrirBalise("Enseignant");
-        xml.ecrireValeur("Diminutif", this.getDiminutif());
-        xml.ecrireValeur("Nom", this.getNom());
-        xml.ecrireValeur("Prenom", this.getPrenom());
+    public void sauvegarder(XMLSauvegarde xml) {
+        Map<String, String> attributs = new HashMap<>();
+        attributs.put("diminutif", this.getDiminutif());
+        attributs.put("prenom", this.getPrenom());
+        attributs.put("nom", this.getNom());
+        xml.ouvrirBalise("Enseignant", attributs, true);
         xml.ouvrirBalise("Matieres");
         for(Matiere matiere : this.getMatieres())
             matiere.sauvegarder(xml);
@@ -77,14 +80,18 @@ public class Enseignant implements ISauvegarde {
         xml.fermerBalise();
     }
 
-    public void charger(XMLObjet xml) {
-        this.nom = xml.getPremiereValeur("Nom");
-        this.prenom = xml.getPremiereValeur("Prenom");
-        this.diminutif = prenom.charAt(0) + "" +  nom.charAt(0) + "" + nom.toLowerCase().charAt(1);
+    @Override
+    public void charger(BDD bdd, Element element) {
+        this.nom = element.getAttribute("nom");
+        this.prenom = element.getAttribute("prenom");
+        this.diminutif = element.getAttribute("diminutif");
         
-        for(XMLObjet matiere : xml.getSousCategories().get(0).getSousCategories()) {
-            String nomMatiere = matiere.getPremiereValeur("Diminutif");
-            this.listeMatieres.add(EDT.getInstance().getBDD().getBaseMatieres().rechercher(nomMatiere));
+        NodeList listeMatieres = ((Element)(element.getElementsByTagName("Matieres").item(0))).getElementsByTagName("Matiere");
+        for(int i = 0; i < listeMatieres.getLength(); i++) {
+            Element matiere = (Element) listeMatieres.item(i);
+            String nomMatiere = matiere.getAttribute("diminutif");
+            Matiere m = bdd.getBaseMatieres().rechercher(nomMatiere);
+            this.listeMatieres.add(m);
         }
     }
 }

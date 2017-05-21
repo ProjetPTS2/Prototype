@@ -6,30 +6,53 @@
 package pts2.utilitaire;
 
 import java.io.PrintWriter;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Stack;
 
 /**
  *
  * @author tgallard
  */
-public class XMLEcriture {
+public class XMLSauvegarde {
     
     private final Stack stack;
     private final PrintWriter writer;
     
-    public XMLEcriture(PrintWriter writer) {
+    public XMLSauvegarde(PrintWriter writer) {
         this.stack = new Stack();
         this.writer = writer;
+    }
+    
+    
+    /**
+     * Ouvre une balise <nom> dans le fichier XML (sans attributs).
+     * @param nom Le nom de la balise.
+     */
+    public void ouvrirBalise(String nom) {
+        this.ouvrirBalise(nom, null, true);
     }
     
     /**
      * Ouvre une balise <nom> dans le fichier XML.
      * @param nom Le nom de la balise.
+     * @param attributs Les attributs de la balise.
+     * @param estElement Determine si la balise peut contenir d'autres élements.
      */
-    public void ouvrirBalise(String nom) {
+    public void ouvrirBalise(String nom, Map<String, String> attributs, boolean estElement) {
         this.faireTabulation();
-        this.writer.print("<"+nom+">");
-        this.stack.add(nom);
+        String ligne = "<"+nom;
+        if(attributs != null) {
+            for(Entry<String, String> entry : attributs.entrySet())
+                ligne += " " + entry.getKey() + "=\"" + entry.getValue() + "\"";
+        }
+        if(estElement) {
+            ligne += ">";
+            this.stack.add(nom);
+            
+        } else
+            ligne += "/>";
+        this.writer.print(ligne);
         this.writer.println();
     }
     
@@ -42,20 +65,6 @@ public class XMLEcriture {
         this.writer.print("</"+nom+">");
         this.writer.println();
     }  
-    
-    /**
-     * Permet d'écrire une valeur dans la dernière balise ouverte.
-     * @param nomValeur Le nom de la valeur à écrire.
-     * @param valeur La valeur à écrire.
-     */
-    public void ecrireValeur(String nomValeur, String valeur) {
-        this.faireTabulation();
-        /*this.writer.print("<"+nomValeur+">");
-        this.writer.print(valeur);
-        this.writer.print("</"+nomValeur+">");*/
-        String str = "<Valeur nom="+'"' + nomValeur + '"' + " valeur="+'"' + valeur + '"' + " />";
-        this.writer.println(str);
-    }
     
     /**
      * Effectue la tabulation dans le fichier XML.

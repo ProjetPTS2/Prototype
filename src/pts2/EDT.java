@@ -3,61 +3,61 @@ package pts2;
 import pts2.donnees.Jours;
 import pts2.bdd.BDD;
 import java.io.File;
-import pts2.donnees.HeureEDT;
+import java.util.Calendar;
+import pts2.donnees.Creneau;
 import pts2.donnees.Salle;
 import pts2.donnees.Matiere;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.paint.Color;
 import javafx.stage.DirectoryChooser;
-import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import pts2.donnees.Cours;
 import pts2.donnees.Enseignant;
 import pts2.donnees.TypeCours;
 import pts2.ihm.AccueilController;
-import pts2.ihm.IFenetre;
+import pts2.ihm.Fenetre;
 
 public class EDT extends Application {
     
-    private static EDT instance;
+    private static AccueilController accueil;
+    private final BDD bdd;
     
-    private AccueilController accueil;
-    private BDD bdd;
-    
-    public EDT() {
-        instance = this;
-        
+    public EDT() {        
         this.bdd = new BDD();
         
         this.creationDonnees();
-        //this.bdd.charger("test.xml");
     }
     
     /**
      * Créer un nouvel emploi du temps vide.
-     * @param creerNouvelleBase Définit si la fonction doit créer une nouvelle base de données.
-     * @return Retourne le fichier dans lequel la base de données a été sauvegardée.
      */
-    public File sauvegarderEDT(boolean creerNouvelleBase) {
-        DirectoryChooser directoryChooser = new DirectoryChooser();
-        directoryChooser.setTitle("Sauvegarder l'emploi du temps");
-        File fichier = directoryChooser.showDialog(this.accueil.getStage());
-        if(fichier != null) {
-            this.bdd.setRepertoire(fichier);
-            if(creerNouvelleBase)
-                this.bdd = new BDD(fichier);
+    public void sauvegarderEDT() {
+        if(this.bdd.getRepertoire() == null) {
+            DirectoryChooser fileChooser = new DirectoryChooser();
+            fileChooser.setTitle("Sauvegarder l'emploi du temps");
+            File dossier = fileChooser.showDialog(accueil.getStage());
+            if(dossier != null) {
+                this.bdd.setRepertoire(dossier);
+                this.bdd.sauvegarder();
+            }
+        } else
             this.bdd.sauvegarder();
-            this.accueil.actualiser();
-        }
-        return fichier;
     }
     
-    public void chargerEDT(File fichier) {
-        this.bdd = new BDD(fichier);
-        this.bdd.charger(fichier);
-        this.accueil.actualiser();
+    /**
+     * Ouvre une boite de dialogue pour charger un emploi du temps.
+     */
+    public void chargerEDT() {
+        DirectoryChooser fileChooser = new DirectoryChooser();
+        fileChooser.setTitle("Charger un emploi du temps");
+        File dossier = fileChooser.showDialog(accueil.getStage());
+        if(dossier != null) {
+            this.bdd.setRepertoire(dossier);
+            this.bdd.charger();
+        }
     }
     
     /**
@@ -83,15 +83,13 @@ public class EDT extends Application {
         
         
         bebien.ajouterMatiere(this.bdd.getBaseMatieres().rechercher("ANG"));
-        bebien.ajouterMatiere(this.bdd.getBaseMatieres().rechercher("POO"));    
+        bebien.ajouterMatiere(this.bdd.getBaseMatieres().rechercher("POO"));   
+        
+        Cours testCours1 = new Cours(new Creneau(Jours.JEUDI, 10, 10, 120), bebien, this.bdd.getBaseMatieres().rechercher("POO"), this.bdd.getBaseSalles().rechercher("D201"), this.bdd.getBaseTypeCours().rechercher("TD"));
         
         
-        this.bdd.placerCours(11, "VBe", new HeureEDT(10, 10, 120), Jours.JEUDI, "POO", "D301", "TP");
-        this.bdd.placerCours(11, "VBe", new HeureEDT(15, 0, 90), Jours.LUNDI, "ANG", "D201", "TD");
-        this.bdd.placerCours(18, "ADo", new HeureEDT(9, 0, 60), Jours.LUNDI, "BD", "D201", "TD");
-        this.bdd.placerCours(18, "ADo", new HeureEDT(8, 15, 60), Jours.MARDI, "POO", "D201", "TD");
         
-        System.out.println(this.bdd.getBaseSemaines().getListeDonnees().size());
+        this.bdd.getBaseSemaines().rechercher(Calendar.getInstance().get(Calendar.WEEK_OF_YEAR)).ajouterCours(testCours1);
     }
     
     /**
@@ -99,16 +97,16 @@ public class EDT extends Application {
      * @param fenetre La fenêtre à afficher.
      * @return Retourne le stage de la fenêtre.
      */
-    public Stage afficherFenetre(IFenetre fenetre) {
+    public static Stage afficherFenetre(Fenetre fenetre) {
         Stage stage = new Stage();
-        fenetre.initialiser(this.accueil, stage);
+        fenetre.setStage(stage);
         stage.setTitle(fenetre.getNom());
         stage.setScene(new Scene(fenetre.getRacine()));
         if(fenetre instanceof AccueilController == false) {
-            stage.initOwner(this.accueil.getStage());
+            stage.initOwner(accueil.getStage());
             stage.initModality(Modality.WINDOW_MODAL);
             stage.setOnCloseRequest((WindowEvent t) -> {
-                this.accueil.actualiser();
+                accueil.actualiser();
             });
         }
         stage.show();
@@ -119,18 +117,14 @@ public class EDT extends Application {
         return this.bdd;
     }
     
-    public static EDT getInstance() {
-        return instance;
-    }
-    
     public static void main(String args[]) {
         launch(args);
     }
 
     @Override
     public void start(Stage stage) throws Exception {
-        this.accueil = new AccueilController();
-        afficherFenetre(this.accueil);
-        this.accueil.actualiser();
+        accueil = new AccueilController(this);
+        afficherFenetre(accueil);
+        accueil.actualiser();
     }
 }

@@ -7,17 +7,18 @@ package pts2.bdd;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.xml.parsers.ParserConfigurationException;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 import pts2.donnees.Enseignant;
-import pts2.donnees.Salle;
-import pts2.utilitaire.ISauvegarde;
-import pts2.utilitaire.XMLEcriture;
-import pts2.utilitaire.XMLLecture;
-import pts2.utilitaire.XMLObjet;
+import pts2.utilitaire.XML;
+import pts2.utilitaire.XMLSauvegarde;
 
 /**
  *
@@ -44,11 +45,10 @@ public class BaseEnseignants extends Base<Enseignant> {
     }
 
     public void sauvegarder() {
-        System.out.println(this.getCheminAbsolue());
         PrintWriter pw = null;
         try {
             pw = new PrintWriter(new File(this.getCheminAbsolue()));
-            XMLEcriture xml = new XMLEcriture(pw);
+            XMLSauvegarde xml = new XMLSauvegarde(pw);
             xml.ouvrirBalise("Enseignants");
             for(Enseignant enseignant : this.getListeDonnees())
                 enseignant.sauvegarder(xml);
@@ -60,14 +60,23 @@ public class BaseEnseignants extends Base<Enseignant> {
         }
     }
 
+    @Override
     public void charger() {
-        XMLLecture xml = new XMLLecture(this.getCheminAbsolue());
-        xml.lire();
-        for(XMLObjet enseignant : xml.getRacine().getSousCategories()) {
-            Enseignant e = new Enseignant(null, null);
-            e.charger(enseignant);
-            System.out.println("[Enseignant] Ajout: " + e.getNom() + " " + e.getPrenom());
-            this.ajouter(e);
+        try {
+            XML xml = new XML();
+            NodeList liste = xml.lire(this.getCheminAbsolue()).item(0).getChildNodes();
+            for(int i = 0; i < liste.getLength(); i++) {
+                Node node = liste.item(i);
+                if(node.getNodeType() == Node.ELEMENT_NODE) {
+                    Element element = (Element)node;
+                    Enseignant e = new Enseignant(null, null);
+                    e.charger(this.bdd, element);
+                    System.out.println("[Enseignant] Ajout: " + e.getNom() + " " + e.getPrenom());
+                    this.ajouter(e);
+                }
+            }
+        } catch (ParserConfigurationException | IOException | SAXException ex) {
+            Logger.getLogger(BaseEnseignants.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     

@@ -11,15 +11,16 @@ import java.util.List;
 /**
  *
  * @author Theo
+ * @param <T> Le type de données que la base doit utiliser.
  */
 public abstract class Base<T> {
     
     private final List<T> liste;
     protected BDD bdd;
-    private String nomFichier;
+    private final String nomFichier;
     
     public Base(BDD bdd, String nomFichier) {
-        this.liste = new ArrayList<T>();
+        this.liste = new ArrayList<>();
         this.bdd = bdd;
         this.nomFichier = nomFichier;
     }
@@ -56,6 +57,13 @@ public abstract class Base<T> {
      */
     public boolean supprimer(T e) {
         return this.liste.remove(e);
+    }
+    
+    /**
+     * Vide la base de données.
+     */
+    public void vider() {
+        this.liste.clear();
     }
     
     /**

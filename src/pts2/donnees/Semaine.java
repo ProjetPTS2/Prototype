@@ -1,12 +1,15 @@
 package pts2.donnees;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 import pts2.EDT;
 import pts2.bdd.BDD;
 import pts2.utilitaire.ISauvegarde;
-import pts2.utilitaire.XMLEcriture;
-import pts2.utilitaire.XMLObjet;
+import pts2.utilitaire.XMLSauvegarde;
 
 
 public class Semaine implements ISauvegarde {
@@ -34,16 +37,16 @@ public class Semaine implements ISauvegarde {
     public List<Cours> getListeCours(Jours jours) {
         List<Cours> cours = new ArrayList<>();
         for(Cours c : this.listeCours) {
-            if(c.getJours() == jours)
+            if(c.getCreneau().getJours().equals(jours))
                 cours.add(c);
         }
         return cours;
     }
     
-    public boolean intersectionHeure(Jours jours, HeureEDT heure) {
+    public boolean intersectionHeure(Creneau creneau) {
         boolean resultat = false;
-        for(Cours cours : this.getListeCours(jours)) {
-            if(cours.getHeure().intersection(heure)) {
+        for(Cours cours : this.getListeCours(creneau.getJours())) {
+            if(cours.getCreneau().intersection(creneau)) {
                 resultat = true;
                 break;
             }
@@ -52,21 +55,23 @@ public class Semaine implements ISauvegarde {
     }
 
     @Override
-    public void sauvegarder(XMLEcriture xml) {
-        xml.ouvrirBalise("Semaine");
-        xml.ecrireValeur("NoSemaine", this.noSemaine+"");
-        for(Cours cours : this.listeCours) {
+    public void sauvegarder(XMLSauvegarde xml) {
+        Map<String, String> attributs = new HashMap<>();
+        attributs.put("numero", this.noSemaine+"");
+        xml.ouvrirBalise("Semaine", attributs, true);
+        for(Cours cours : this.listeCours)
             cours.sauvegarder(xml);
-        }
         xml.fermerBalise();
     }
 
     @Override
-    public void charger(XMLObjet xml) {
-        this.noSemaine = Integer.parseInt(xml.getPremiereValeur("NoSemaine"));
-        for(XMLObjet _cours : xml.getSousCategories()) {
-            Cours cours = new Cours(null, null, null, null, null, null);
-            cours.charger(_cours);
+    public void charger(BDD bdd, Element element) {
+        this.noSemaine = Integer.parseInt(element.getAttribute("numero"));
+        NodeList listeCours = element.getElementsByTagName("Cours");
+        for(int i = 0; i < listeCours.getLength(); i++) {
+            Element e = ((Element)listeCours.item(i));
+            Cours cours = new Cours(null, null, null, null, null);
+            cours.charger(bdd, e);
             this.listeCours.add(cours);
         }
     }

@@ -1,16 +1,6 @@
 package pts2.bdd;
 
-import pts2.donnees.HeureEDT;
 import java.io.File;
-import pts2.EDT;
-import pts2.donnees.Jours;
-
-import pts2.donnees.Cours;
-import pts2.donnees.Enseignant;
-import pts2.donnees.Matiere;
-import pts2.donnees.Salle;
-import pts2.donnees.Semaine;
-import pts2.donnees.TypeCours;
 
 
 public class BDD {
@@ -31,7 +21,7 @@ public class BDD {
     
     /**
      * Constructeur de la Base de données
-     * @param fichier Le fichier de l'emploi du temps.
+     * @param repertoire Le dossier de l'emploi du temps.
      */
     public BDD(File repertoire) {
         this.repertoire = repertoire;
@@ -40,41 +30,6 @@ public class BDD {
         this.baseSemaines = new BaseSemaines(this);
         this.baseTypeCours = new BaseTypeCours(this);
         this.baseSalles = new BaseSalles(this);
-    }
-    
-    /**
-     * Ajoute un cours à l'emploi du temps.
-     * @param noSemaine Le numéro de la semaine.
-     * @param enseignant Le diminutif de l'enseignant.
-     * @param heure L'heure du cours.
-     * @param jour Le jour du cours.
-     * @param matiere La matière du cours.
-     * @param nomSalle Le nom de la salle.
-     * @param typeCours Le type de cours.
-     */
-    public void placerCours(int noSemaine, String enseignant, HeureEDT heure, Jours jour, String matiere, String nomSalle, String typeCours) {
-        Semaine semaine = this.baseSemaines.rechercher(noSemaine);
-        Enseignant e = this.baseEnseignants.rechercher(enseignant);
-        if(e == null) {
-            System.out.println("Enseignant null");
-            return;
-        }
-        Matiere m = this.baseMatieres.rechercher(matiere);
-        if(m == null) {
-            System.out.println("Matiere null");
-            return;
-        }
-        Salle s = this.baseSalles.rechercher(nomSalle);
-        if(s == null) {
-            System.out.println("Salle null");
-            return;
-        }
-        TypeCours tc = this.baseTypeCours.rechercher(typeCours);
-        if(tc == null) {
-            System.out.println("TypeCours null");
-            return;
-        }
-        semaine.ajouterCours(new Cours(jour, heure, e, m, s, tc));
     }
     
     public File getRepertoire() {
@@ -113,11 +68,6 @@ public class BDD {
      * Sauvegarde la base de données dans le fichier nomFichier.
      */
     public void sauvegarder() {
-        if(this.repertoire == null) {
-            System.out.println("repertoire non défini !");
-            EDT.getInstance().sauvegarderEDT(false);
-            return;
-        }
         this.getBaseEnseignants().sauvegarder();
         this.getBaseMatieres().sauvegarder();
         this.getBaseSalles().sauvegarder();
@@ -126,17 +76,27 @@ public class BDD {
     }
     
     /**
-     * Charge la base de données à partir d'un fichier.
-     * @param fichier Le fichier à charger.
+     * Vide la base de données.
      */
-    public void charger(File fichier) {
-        this.repertoire = fichier;
+    public void vider() {
+        this.getBaseEnseignants().vider();
+        this.getBaseMatieres().vider();
+        this.getBaseSalles().vider();
+        this.getBaseTypeCours().vider();
+        this.getBaseSemaines().vider();
+    }
+    
+    /**
+     * Charge la base de données.
+     */
+    public void charger() {
         if(this.repertoire == null) {
             System.out.println("repertoire non défini !");
             return;
         }
-        this.getBaseEnseignants().charger();
+        this.vider();
         this.getBaseMatieres().charger();
+        this.getBaseEnseignants().charger();
         this.getBaseSalles().charger();
         this.getBaseTypeCours().charger();
         this.getBaseSemaines().charger();

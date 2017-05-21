@@ -8,7 +8,7 @@ package pts2.composants;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import pts2.Constantes;
+import pts2.utilitaire.Constantes;
 
 /**
  *

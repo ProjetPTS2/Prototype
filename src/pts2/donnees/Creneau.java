@@ -5,27 +5,31 @@
  */
 package pts2.donnees;
 
+import java.util.HashMap;
+import java.util.Map;
+import org.w3c.dom.Element;
 import pts2.bdd.BDD;
 import pts2.utilitaire.ISauvegarde;
-import pts2.utilitaire.XMLEcriture;
-import pts2.utilitaire.XMLObjet;
+import pts2.utilitaire.XMLSauvegarde;
 
 /**
  *
  * @author local192
  */
-public class HeureEDT implements ISauvegarde {
+public class Creneau implements ISauvegarde {
 
+    private Jours jours;
     private int heure, minute, duree;
     
-    public HeureEDT(int heure, int minute) {
-        this(heure, minute, 0);
-    }
-    
-    public HeureEDT(int heure, int minute, int duree) {
+    public Creneau(Jours jours, int heure, int minute, int duree) {
+        this.jours = jours;
         this.heure = heure;
         this.minute = minute;
         this.duree = duree;
+    }
+    
+    public Jours getJours() {
+        return this.jours;
     }
     
     public int getHeure() {
@@ -57,6 +61,10 @@ public class HeureEDT implements ISauvegarde {
         return str;
     }
     
+    public void setJours(Jours jours) {
+        this.jours = jours;
+    }
+    
     public void setHeure(int heure) {
         this.heure = heure;
     }
@@ -69,13 +77,13 @@ public class HeureEDT implements ISauvegarde {
         this.duree = duree;
     }
 
-    public boolean compare(HeureEDT heure) {
+    public boolean compare(Creneau heure) {
         return this.heure == heure.heure &&
                 this.minute == heure.minute &&
                 this.duree == heure.duree;
     }
     
-    public boolean intersection(HeureEDT heure) {
+    public boolean intersection(Creneau heure) {
         if(this.equals(heure))
             return false;
         if(this.compare(heure))
@@ -91,24 +99,27 @@ public class HeureEDT implements ISauvegarde {
                 (totalMinute2_fin > totalMinute && totalMinute2_fin < totalMinute_fin));
     }
     
-    public HeureEDT dupliquer() {
-        return new HeureEDT(this.heure, this.minute, this.duree);
+    public Creneau dupliquer() {
+        return new Creneau(this.jours, this.heure, this.minute, this.duree);
     }
     
     
     @Override
-    public void sauvegarder(XMLEcriture xml) {
-        xml.ouvrirBalise("Heure");
-        xml.ecrireValeur("HeureDebut", ""+this.heure);
-        xml.ecrireValeur("MinuteDebut", ""+this.minute);
-        xml.ecrireValeur("Duree", ""+this.duree);
-        xml.fermerBalise();
+    public void sauvegarder(XMLSauvegarde xml) {
+        Map<String, String> attributs = new HashMap<>();
+        attributs.put("jours", this.jours.getNom());
+        attributs.put("heure", ""+this.heure);
+        attributs.put("minute", ""+this.minute);
+        attributs.put("duree", ""+this.duree);
+        
+        xml.ouvrirBalise("Creneau", attributs, false);
     }
 
     @Override
-    public void charger(XMLObjet xml) {
-        this.heure = Integer.parseInt(xml.getPremiereValeur("HeureDebut"));
-        this.minute = Integer.parseInt(xml.getPremiereValeur("MinuteDebut"));
-        this.duree = Integer.parseInt(xml.getPremiereValeur("Duree"));
+    public void charger(BDD bdd, Element element) {
+        this.jours = Jours.valueOf(element.getAttribute("jours").toUpperCase());
+        this.heure = Integer.parseInt(element.getAttribute("heure"));
+        this.minute = Integer.parseInt(element.getAttribute("minute"));
+        this.duree = Integer.parseInt(element.getAttribute("duree"));
     }
 }

@@ -1,9 +1,12 @@
 package pts2.donnees;
 
+import java.util.HashMap;
+import java.util.Map;
 import javafx.scene.paint.Color;
+import org.w3c.dom.Element;
+import pts2.bdd.BDD;
 import pts2.utilitaire.ISauvegarde;
-import pts2.utilitaire.XMLEcriture;
-import pts2.utilitaire.XMLObjet;
+import pts2.utilitaire.XMLSauvegarde;
 
 
 
@@ -44,19 +47,21 @@ public class Matiere implements ISauvegarde {
     }
 
     @Override
-    public void sauvegarder(XMLEcriture xml) {
-        xml.ouvrirBalise("Matiere");
-        xml.ecrireValeur("Diminutif", this.getDiminutif());
-        xml.ecrireValeur("Nom", this.getNom());
-        xml.ecrireValeur("Couleur", (int)(255*this.couleur.getRed())+ ";" + (int)(255*this.couleur.getGreen()) + ";" + (int)(255*this.couleur.getBlue()));
-        xml.fermerBalise();
+    public void sauvegarder(XMLSauvegarde xml) {
+        Map<String, String> attributs = new HashMap<>();
+        attributs.put("diminutif", this.getDiminutif());
+        attributs.put("nom", this.getNom());
+        attributs.put("couleur", String.format( "#%02X%02X%02X",
+            (int)( this.couleur.getRed() * 255 ),
+            (int)( this.couleur.getGreen() * 255 ),
+            (int)( this.couleur.getBlue() * 255 )));
+        xml.ouvrirBalise("Matiere", attributs, false);
     }
 
     @Override
-    public void charger(XMLObjet xml) {
-        this.diminutif = xml.getPremiereValeur("Diminutif");
-        this.nom = xml.getPremiereValeur("Nom");
-        String[] clr = xml.getPremiereValeur("Couleur").split(";");
-        this.couleur = Color.rgb(Integer.parseInt(clr[0]), Integer.parseInt(clr[1]), Integer.parseInt(clr[2]));
+    public void charger(BDD bdd, Element element) {
+        this.diminutif = element.getAttribute("diminutif");
+        this.nom = element.getAttribute("nom");
+        this.couleur = Color.web(element.getAttribute("couleur"));
     }
 }

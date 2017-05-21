@@ -9,7 +9,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 import javafx.scene.layout.HBox;
-import pts2.EDT;
+import pts2.bdd.BaseSemaines;
 
 /**
  *
@@ -27,7 +27,7 @@ public class ComposantSemaines extends HBox {
         this.boutonSemaines = new Button[52];
     }
     
-    public void initialiserComposants(ComposantEDT edt) {
+    public void initialiserComposants(BaseSemaines baseSemaines, ComposantEDT edt) {
         for(int i = 0; i < 52; i++) {
             int semaine = this.convertirSemaineEnID(i);
             final int noSemaine = semaine;
@@ -40,7 +40,7 @@ public class ComposantSemaines extends HBox {
             btn.setOnAction(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent event) {
-                    edt.actualiser(EDT.getInstance().getBDD().getBaseSemaines().rechercher(noSemaine));
+                    edt.actualiser(baseSemaines.rechercher(noSemaine));
                     boutonSemaines[id].setDisable(true);
                     boutonSemaines[idSemaine].setDisable(false);
                     idSemaine = id;

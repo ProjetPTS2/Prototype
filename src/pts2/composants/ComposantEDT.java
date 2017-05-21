@@ -12,8 +12,8 @@ import javafx.scene.Node;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
-import pts2.Constantes;
-import pts2.EDT;
+import pts2.utilitaire.Constantes;
+import pts2.bdd.BDD;
 import pts2.donnees.Jours;
 import pts2.donnees.Cours;
 import pts2.donnees.Semaine;
@@ -24,6 +24,7 @@ import pts2.donnees.Semaine;
  */
 public class ComposantEDT extends Pane {
     
+    private BDD bdd;
     private ScrollPane scrollPane;
     private Group edtCours;
     private ComposantSurvol texteSurvol;
@@ -34,7 +35,8 @@ public class ComposantEDT extends Pane {
     
     private double sourisX, sourisY;
     
-    public ComposantEDT(Node parent) {
+    public ComposantEDT(BDD bdd, Node parent) {
+        this.bdd = bdd;
         this.scrollPane = (ScrollPane)parent;
         this.edtCours = new Group();
         this.texteSurvol = new ComposantSurvol();
@@ -89,11 +91,8 @@ public class ComposantEDT extends Pane {
         this.getChildren().add(this.edtCours);
     }   
     
-    public void actualiser(boolean actualiserSemaine) {
-        if(!actualiserSemaine)
-            this.actualiser(this.semaineActuelle);
-        else
-            this.actualiser(EDT.getInstance().getBDD().getBaseSemaines().rechercher(this.semaineActuelle.getNoSemaine()));
+    public void actualiser() {
+        this.actualiser(this.bdd.getBaseSemaines().rechercher(this.semaineActuelle.getNoSemaine()));
     }
     
     public void actualiser(Semaine semaine) {
@@ -105,7 +104,7 @@ public class ComposantEDT extends Pane {
         
         // AFFICHAGE DES COURS
         for(Cours cours : semaine.getListeCours()) {
-                ComposantHeure coursComposant = new ComposantHeure(this, semaine, cours, (cours.getHeure().getHeure()-Constantes.HEURE_DEBUT) * Constantes.LARGEUR_HEURES + Constantes.LARGEUR_JOURS + Constantes.MARGE_HORIZONTAL, cours.getJours().getNumero() * Constantes.HAUTEUR_JOURS + Constantes.HAUTEUR_HEURES + Constantes.MARGE_VERTICAL);
+                ComposantHeure coursComposant = new ComposantHeure(this, semaine, cours, (cours.getCreneau().getHeure()-Constantes.HEURE_DEBUT) * Constantes.LARGEUR_HEURES + Constantes.LARGEUR_JOURS + Constantes.MARGE_HORIZONTAL, cours.getCreneau().getJours().getNumero() * Constantes.HAUTEUR_JOURS + Constantes.HAUTEUR_HEURES + Constantes.MARGE_VERTICAL);
                 coursComposant.initialiserEvents(this.getScene(), this.scrollPane, this.texteSurvol);
                 this.edtCours.getChildren().add(coursComposant);
         }
@@ -155,7 +154,9 @@ public class ComposantEDT extends Pane {
         event.consume();
     }
     
-    
+    public BDD getBDD() {
+        return this.bdd;
+    }
     
     
     

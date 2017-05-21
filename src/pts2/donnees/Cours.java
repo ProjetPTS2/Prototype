@@ -1,16 +1,16 @@
 package pts2.donnees;
 
-import pts2.EDT;
+import java.util.HashMap;
+import java.util.Map;
+import org.w3c.dom.Element;
 import pts2.bdd.BDD;
 import pts2.utilitaire.ISauvegarde;
-import pts2.utilitaire.XMLEcriture;
-import pts2.utilitaire.XMLObjet;
+import pts2.utilitaire.XMLSauvegarde;
 
 
 public class Cours implements ISauvegarde {
     
-    private Jours jours;
-    private HeureEDT heure;
+    private Creneau creneau;
     private Enseignant enseignant;
     private TypeCours typeCours;
     private Matiere matiere;
@@ -18,26 +18,22 @@ public class Cours implements ISauvegarde {
     
     /**
      * Constructeur de la classe Cours.
+     * @param creneau Le creneau du cours.
      * @param enseignant L'enseignant assigné à ce cours.
      * @param matiere La matière de ce cours.
      * @param salle La salle de ce cours.
      * @param typeCours Le type de ce cours.
      */
-    public Cours(Jours jours, HeureEDT heure, Enseignant enseignant, Matiere matiere, Salle salle, TypeCours typeCours) {
-        this.jours = jours;
-        this.heure = heure;
+    public Cours(Creneau creneau, Enseignant enseignant, Matiere matiere, Salle salle, TypeCours typeCours) {
+        this.creneau = creneau;
         this.enseignant = enseignant;
         this.matiere = matiere;
         this.typeCours = typeCours;
         this.salle = salle;
     }
     
-    public Jours getJours() {
-        return this.jours;
-    }
-    
-    public HeureEDT getHeure() {
-        return this.heure;
+    public Creneau getCreneau() {
+        return this.creneau;
     }
     
     public Enseignant getEnseignant() {
@@ -56,18 +52,13 @@ public class Cours implements ISauvegarde {
         return this.salle;
     }
     
-    
-    public void setJours(Jours jours) {
-        this.jours = jours;
-    }
-    
-    public void setHeure(HeureEDT heure) {
+    public void setCreneau(Creneau heure) {
         if(heure != null) {
-            this.heure.setHeure(heure.getHeure());
-            this.heure.setMinute(heure.getMinute());
-            this.heure.setDuree(heure.getDuree());
+            this.creneau.setHeure(heure.getHeure());
+            this.creneau.setMinute(heure.getMinute());
+            this.creneau.setDuree(heure.getDuree());
         } else
-            this.heure = heure;
+            this.creneau = heure;
     }
     
     public void setEnseignant(Enseignant enseignant) {
@@ -88,31 +79,25 @@ public class Cours implements ISauvegarde {
 
     
     @Override
-    public void sauvegarder(XMLEcriture xml) {
-        xml.ouvrirBalise("Cours");
-        this.enseignant.sauvegarder(xml);
-        this.matiere.sauvegarder(xml);
-        this.salle.sauvegarder(xml);
-        this.heure.sauvegarder(xml);
-        this.typeCours.sauvegarder(xml);
-        xml.ecrireValeur("Jours", this.jours.getNumero()+"");
+    public void sauvegarder(XMLSauvegarde xml) {
+        Map<String, String> attributs = new HashMap<>();
+        attributs.put("enseignant", this.enseignant.getDiminutif());
+        attributs.put("matiere", this.matiere.getDiminutif());
+        attributs.put("salle", this.salle.getNom());
+        attributs.put("typecours", this.typeCours.getNom());
+        xml.ouvrirBalise("Cours", attributs, true);
+        this.creneau.sauvegarder(xml);
         xml.fermerBalise();
     }
 
     
     @Override
-    public void charger(XMLObjet xml) {
-        BDD bdd = EDT.getInstance().getBDD();
-        String diminutifEnseignant = xml.getSousCategories().get(0).getPremiereValeur("Diminutif");
-        this.enseignant = bdd.getBaseEnseignants().rechercher(diminutifEnseignant);
-        String diminutifMatiere = xml.getSousCategories().get(1).getPremiereValeur("Diminutif");
-        this.matiere = bdd.getBaseMatieres().rechercher(diminutifMatiere);
-        String nomSalle = xml.getSousCategories().get(2).getPremiereValeur("Nom");
-        this.salle = bdd.getBaseSalles().rechercher(nomSalle);
-        this.heure = new HeureEDT(0, 0, 0);
-        this.heure.charger(xml.getSousCategories().get(3));
-        this.jours = Jours.values()[Integer.parseInt(xml.getPremiereValeur("Jours"))];
-        String typeCours = xml.getSousCategories().get(4).getPremiereValeur("Nom");
-        this.typeCours = bdd.getBaseTypeCours().rechercher(typeCours);
+    public void charger(BDD bdd, Element element) {
+        this.enseignant = bdd.getBaseEnseignants().rechercher(element.getAttribute("enseignant"));
+        this.matiere = bdd.getBaseMatieres().rechercher(element.getAttribute("matiere"));
+        this.salle = bdd.getBaseSalles().rechercher(element.getAttribute("salle"));
+        this.creneau = new Creneau(Jours.LUNDI, 0, 0, 0);
+        this.creneau.charger(bdd, ((Element)(element.getElementsByTagName("Creneau").item(0))));
+        this.typeCours = bdd.getBaseTypeCours().rechercher(element.getAttribute("typecours"));
     }
 }

@@ -6,13 +6,19 @@
 package pts2.bdd;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.xml.parsers.ParserConfigurationException;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
+import pts2.donnees.Cours;
 import pts2.donnees.Semaine;
-import pts2.utilitaire.XMLEcriture;
-import pts2.utilitaire.XMLLecture;
-import pts2.utilitaire.XMLObjet;
+import pts2.utilitaire.XML;
+import pts2.utilitaire.XMLSauvegarde;
 
 /**
  *
@@ -48,7 +54,7 @@ public class BaseSemaines extends Base<Semaine> {
         try {
             PrintWriter writer = null;
             writer = new PrintWriter(this.getCheminAbsolue());
-            XMLEcriture xml = new XMLEcriture(writer);
+            XMLSauvegarde xml = new XMLSauvegarde(writer);
             xml.ouvrirBalise("Semaines");
             for(Semaine semaine : this.getListeDonnees())
                 semaine.sauvegarder(xml);
@@ -61,14 +67,23 @@ public class BaseSemaines extends Base<Semaine> {
 
     @Override
     public void charger() {
-        XMLLecture xml = new XMLLecture(this.getCheminAbsolue());
-        xml.lire();
-        XMLObjet semaines = xml.rechercherCategorie("Semaines");
-        for(XMLObjet semaine : xml.getRacine().getSousCategories()) {
-            Semaine s = new Semaine(-1);
-            s.charger(semaine);
-            System.out.println("[Semaine] Ajout: n°" + s.getNoSemaine());
-            this.ajouter(s);
+        try {
+            XML xml = new XML();
+            NodeList liste = xml.lire(this.getCheminAbsolue()).item(0).getChildNodes();
+            for(int i = 0; i < liste.getLength(); i++) {
+                Node node = liste.item(i);
+                if(node.getNodeType() == Node.ELEMENT_NODE) {
+                    Element element = (Element)node;
+                    Semaine e = new Semaine(0);
+                    e.charger(this.bdd, element);
+                    System.out.println("[Semaine] Ajout: n°" + e.getNoSemaine());
+                    for(Cours cours : e.getListeCours())
+                        System.out.println("-> Cours " + cours.getCreneau().getHeureDebutString() + " " + cours.getMatiere().getDiminutif() + " " + cours.getTypeCours().getNom());
+                    this.ajouter(e);
+                }
+            }
+        } catch (ParserConfigurationException | IOException | SAXException ex) {
+            Logger.getLogger(BaseEnseignants.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     

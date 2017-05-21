@@ -5,25 +5,18 @@
  */
 package pts2.ihm;
 
-import java.io.File;
 import pts2.ihm.edition.EditerMatieresController;
 import pts2.ihm.edition.EditerSallesController;
-import java.io.IOException;
 import java.net.URL;
 import java.util.Calendar;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.AnchorPane;
-import javafx.stage.DirectoryChooser;
-import javafx.stage.FileChooser;
-import javafx.stage.Stage;
 import pts2.EDT;
 import pts2.composants.ComposantEDT;
 import pts2.composants.ComposantSemaines;
@@ -34,13 +27,10 @@ import pts2.ihm.edition.AjouterCoursController;
  *
  * @author Theo
  */
-public class AccueilController implements IFenetre, Initializable {
+public class AccueilController extends Fenetre implements Initializable {
     
-    private Stage stage;
-    private Parent racine;
-    
+    private final EDT edt;
     private ComposantSemaines composantSemaines;
-    private ComposantEDT composantEDT;
     
     @FXML
     private AnchorPane racinePane;
@@ -53,48 +43,27 @@ public class AccueilController implements IFenetre, Initializable {
     
     public static int SNAP = 1;
     
+    public AccueilController(EDT edt) {
+        super("R3G15", "Accueil.fxml", edt.getBDD(), null);
+        super.chargerIHM();
+        this.edt = edt;
+        this.composantEDT.initaliserEDT(this.bdd.getBaseSemaines().rechercher(Calendar.getInstance().get(Calendar.WEEK_OF_YEAR)));
+        this.composantSemaines.initialiserComposants(this.bdd.getBaseSemaines(), this.composantEDT);
+    }    
     
     
     public void actualiser() {
-        this.composantEDT.actualiser(true);
-    }
-
-    
-    @Override
-    public void initialiser(AccueilController accueilController, Stage stage) {
-         try {
-            this.stage = stage;
-             
-             FXMLLoader loader = new FXMLLoader(getClass().getResource("Accueil.fxml"));
-             loader.setController(this);
-             this.racine = loader.load();
-        } catch(IOException e) {}          
-        this.composantEDT.initaliserEDT(EDT.getInstance().getBDD().getBaseSemaines().rechercher(Calendar.getInstance().get(Calendar.WEEK_OF_YEAR)));
-        this.composantSemaines.initialiserComposants(this.composantEDT);
+        this.composantEDT.actualiser();
     }
     
     public ComposantEDT getComposantEDT() {
         return this.composantEDT;
     }
-
-    @Override
-    public Parent getRacine() {
-        return this.racine;
-    }
-    
-    public Stage getStage() {
-        return this.stage;
-    }
-
-    @Override
-    public String getNom() {
-        return "R3G15";
-    }
     
     
     @Override
     public void initialize(URL url, ResourceBundle rb) { 
-        this.composantEDT = new ComposantEDT(this.edtScrollPane);
+        this.composantEDT = new ComposantEDT(this.bdd, this.edtScrollPane);
         this.composantSemaines = new ComposantSemaines(Calendar.getInstance().get(Calendar.WEEK_OF_YEAR));
         
         this.semainesScrollPane.setContent(this.composantSemaines);
@@ -106,32 +75,31 @@ public class AccueilController implements IFenetre, Initializable {
     
     
     public void menuBar_fichier_nouveau() {
-        EDT.getInstance().sauvegarderEDT(true);
+        this.bdd.vider();
+        this.actualiser();
     }
     
     public void menuBar_fichier_ouvrir() {
-        DirectoryChooser fileChooser = new DirectoryChooser();
-        fileChooser.setTitle("Charger un emploi du temps");
-        File fichier = fileChooser.showDialog(this.stage);
-        EDT.getInstance().chargerEDT(fichier);
+        this.edt.chargerEDT();
+        this.actualiser();
     }
     
     public void menuBar_fichier_sauvegarder() {
-        EDT.getInstance().getBDD().sauvegarder();
+        this.edt.sauvegarderEDT();
     }
     
     
     public void menuBar_edtion_ajouterCours() {
-        EDT.getInstance().afficherFenetre(new AjouterCoursController());
+        EDT.afficherFenetre(new AjouterCoursController(this.edt.getBDD(), this.composantEDT));
     }
     
     
     public void menuBar_edtion_editerSalles() {
-        EDT.getInstance().afficherFenetre(new EditerSallesController());
+        EDT.afficherFenetre(new EditerSallesController(this.edt.getBDD(), this.composantEDT));
     }
     
     public void menuBar_edtion_editerMatieres() {
-        EDT.getInstance().afficherFenetre(new EditerMatieresController());
+        EDT.afficherFenetre(new EditerMatieresController(this.edt.getBDD(), this.composantEDT));
     }
     
     

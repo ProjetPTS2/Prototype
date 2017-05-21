@@ -5,9 +5,12 @@
  */
 package pts2.donnees;
 
+import java.util.HashMap;
+import java.util.Map;
+import org.w3c.dom.Element;
+import pts2.bdd.BDD;
 import pts2.utilitaire.ISauvegarde;
-import pts2.utilitaire.XMLEcriture;
-import pts2.utilitaire.XMLObjet;
+import pts2.utilitaire.XMLSauvegarde;
 
 /**
  *
@@ -30,15 +33,15 @@ public class TypeCours implements ISauvegarde {
     }
 
     @Override
-    public void sauvegarder(XMLEcriture xml) {
-        xml.ouvrirBalise("TypeCours");
-        xml.ecrireValeur("Nom", this.getNom());
-        xml.fermerBalise();
+    public void sauvegarder(XMLSauvegarde xml) {
+        Map<String, String> attributs = new HashMap<>();
+        attributs.put("nom", this.getNom());
+        xml.ouvrirBalise("TypeCours", attributs, false);
     }
 
     @Override
-    public void charger(XMLObjet xml) {
-        this.nom = xml.getPremiereValeur("Nom");
+    public void charger(BDD bdd, Element element) {
+        this.nom = element.getAttribute("nom");
     }
     
 }

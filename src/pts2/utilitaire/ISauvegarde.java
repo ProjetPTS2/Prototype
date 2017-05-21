@@ -5,6 +5,8 @@
  */
 package pts2.utilitaire;
 
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 import pts2.bdd.BDD;
 
 /**
@@ -15,13 +17,11 @@ public interface ISauvegarde {
     
     /**
      * Permet de gérer la sauvegarde d'une classe.
-     * @param xml L'objet XML à modifier.
      */
-    public void sauvegarder(XMLEcriture xml);
+    public void sauvegarder(XMLSauvegarde xml);
     
     /**
      * Permet de charger une classe à partir d'un fichier XML.
-     * @param xml L'objet XML à charger.
      */
-    public void charger(XMLObjet xml);
+    public void charger(BDD bdd, Element element);
 }

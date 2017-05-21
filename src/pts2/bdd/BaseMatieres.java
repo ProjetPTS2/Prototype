@@ -6,11 +6,18 @@
 package pts2.bdd;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.xml.parsers.ParserConfigurationException;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 import pts2.donnees.Matiere;
-import pts2.utilitaire.XMLEcriture;
-import pts2.utilitaire.XMLLecture;
-import pts2.utilitaire.XMLObjet;
+import pts2.utilitaire.XML;
+import pts2.utilitaire.XMLSauvegarde;
 
 /**
  *
@@ -22,6 +29,7 @@ public class BaseMatieres extends Base<Matiere>{
         super(bdd, "matieres.xml");
     }
     
+    @Override
     public Matiere rechercher(Object o) {
         if(o instanceof String == false)
             return null;
@@ -41,7 +49,7 @@ public class BaseMatieres extends Base<Matiere>{
         try {
             PrintWriter writer = null;
             writer = new PrintWriter(this.getCheminAbsolue());
-            XMLEcriture xml = new XMLEcriture(writer);
+            XMLSauvegarde xml = new XMLSauvegarde(writer);
             xml.ouvrirBalise("Matieres");
             for(Matiere matiere : this.getListeDonnees())
                 matiere.sauvegarder(xml);
@@ -54,13 +62,21 @@ public class BaseMatieres extends Base<Matiere>{
 
     @Override
     public void charger() {
-        XMLLecture xml = new XMLLecture(this.getCheminAbsolue());
-        xml.lire();
-        for(XMLObjet matiere : xml.getRacine().getSousCategories()) {
-            Matiere m = new Matiere(null, null, null);
-            m.charger(matiere);
-            System.out.println("[Matiere] Ajout: " + m.getNom());
-            this.ajouter(m);
+        try {
+            XML xml = new XML();
+            NodeList liste = xml.lire(this.getCheminAbsolue()).item(0).getChildNodes();
+            for(int i = 0; i < liste.getLength(); i++) {
+                Node node = liste.item(i);
+                if(node.getNodeType() == Node.ELEMENT_NODE) {
+                    Element element = (Element)node;
+                    Matiere e = new Matiere(null, null, null);
+                    e.charger(this.bdd, element);
+                    System.out.println("[Matiere] Ajout: " + e.getNom());
+                    this.ajouter(e);
+                }
+            }
+        } catch (ParserConfigurationException | IOException | SAXException ex) {
+            Logger.getLogger(BaseEnseignants.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
