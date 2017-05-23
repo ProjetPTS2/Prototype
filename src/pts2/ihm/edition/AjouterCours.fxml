@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane id="AnchorPane" prefHeight="408.00019999999495" prefWidth="437.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2">
+<AnchorPane id="AnchorPane" prefHeight="408.00019999999495" prefWidth="437.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
   <children>
     <Button defaultButton="true" layoutX="27.0" layoutY="343.0" mnemonicParsing="false" onMouseClicked="#placerCours" prefHeight="30.0" prefWidth="384.0" text="Placer le cours">
       <font>
@@ -60,7 +60,7 @@
         <Label font="$x1" text="Enseignant:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
         <GridPane GridPane.columnIndex="1" GridPane.rowIndex="5">
           <children>
-            <Label font="$x1" text="min" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+            <Label font="$x1" text="  min" GridPane.columnIndex="1" GridPane.rowIndex="0" />
             <TextField id="heureFin" fx:id="dureeTexte" alignment="CENTER_RIGHT" prefWidth="92.00009999999747" promptText="Temps en minutes..." GridPane.columnIndex="0" GridPane.rowIndex="0" />
           </children>
           <columnConstraints>
