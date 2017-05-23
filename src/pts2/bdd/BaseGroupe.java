@@ -74,7 +74,7 @@ public class BaseGroupe extends Base<Groupe> {
                 }
             }
         } catch (ParserConfigurationException | IOException | SAXException ex) {
-            Logger.getLogger(BaseEnseignants.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(BaseGroupe.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
