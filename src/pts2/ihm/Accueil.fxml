@@ -9,7 +9,7 @@
 <?import javafx.scene.shape.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane id="AnchorPane" fx:id="racinePane" prefHeight="720.0" prefWidth="1280.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2">
+<AnchorPane id="AnchorPane" fx:id="racinePane" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
   <children>
     <ScrollPane fx:id="semainesScrollPane" content="$null" focusTraversable="false" layoutY="27.0" minHeight="0.0" prefHeight="60.0" prefWidth="1280.0" style="-fx-focus-color: transparent;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
     <ScrollPane fx:id="edtScrollPane" content="$null" layoutY="87.0" prefHeight="467.0" prefWidth="949.0" style="-fx-focus-color: transparent;" vbarPolicy="NEVER" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
@@ -56,8 +56,9 @@
             <SeparatorMenuItem mnemonicParsing="false" />
             <MenuItem mnemonicParsing="false" onAction="#menuBar_edtion_editerSalles" text="Editer les salles" />
             <MenuItem mnemonicParsing="false" onAction="#menuBar_edtion_editerMatieres" text="Editer les matières" />
+                  <MenuItem mnemonicParsing="false" onAction="#menuBar_edtion_editerTypeCours" text="Editer les types de cours" />
             <SeparatorMenuItem mnemonicParsing="false" />
-            <Menu mnemonicParsing="false" text="Snap" fx:id="snapMenu">
+            <Menu fx:id="snapMenu" mnemonicParsing="false" text="Snap">
               <items>
                 <CheckMenuItem mnemonicParsing="false" onAction="#menuBar_edition_snap_1" selected="true" text="1 minute" />
                 <CheckMenuItem mnemonicParsing="false" onAction="#menuBar_edition_snap_5" text="5 minutes" />

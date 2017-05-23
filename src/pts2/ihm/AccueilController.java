@@ -21,6 +21,7 @@ import pts2.EDT;
 import pts2.composants.ComposantEDT;
 import pts2.composants.ComposantSemaines;
 import pts2.ihm.edition.AjouterCoursController;
+import pts2.ihm.edition.EditerTypeCoursController;
 
 /**
  * FXML Controller class
@@ -100,6 +101,10 @@ public class AccueilController extends Fenetre implements Initializable {
     
     public void menuBar_edtion_editerMatieres() {
         EDT.afficherFenetre(new EditerMatieresController(this.edt.getBDD(), this.composantEDT));
+    }
+    
+    public void menuBar_edtion_editerTypeCours() {
+        EDT.afficherFenetre(new EditerTypeCoursController(this.edt.getBDD(), this.composantEDT));
     }
     
     
