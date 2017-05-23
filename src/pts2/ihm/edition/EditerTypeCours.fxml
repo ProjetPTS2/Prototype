@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.shape.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <TabPane prefHeight="400.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE">
+        <tabs>
+          <Tab text="Ajouter Type Cours">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <Label layoutX="54.0" layoutY="46.0" text="Nom Type Cours" />
+                        <TextField fx:id="ajouterTypeCours_nomTypeCours" layoutX="188.0" layoutY="42.0" prefHeight="25.0" prefWidth="214.0" promptText="Nom du type de cours..." />
+                        <Label fx:id="ajouterTypeCours_resultat" layoutX="54.0" layoutY="252.0" text="Résultat" />
+                        <Button layoutX="77.0" layoutY="289.0" mnemonicParsing="false" onMouseClicked="#ajouterTypeCours_valider" prefHeight="55.0" prefWidth="473.0" text="Ajouter Type Cours" />
+                     </children>
+                  </AnchorPane>
+            </content>
+          </Tab>
+          <Tab fx:id="tab" onSelectionChanged="#changementTab" text="Editer Type Cours">
+            <content>
+              <AnchorPane fx:id="editerTypeCours_pane" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <Label layoutX="50.0" layoutY="33.0" text="Type Cour:" />
+                        <Label fx:id="editerTypeCours_resultat" layoutX="418.0" layoutY="33.0" text="Résultat" />
+                        <ComboBox fx:id="editerTypeCours_choixCours" layoutX="150.0" layoutY="29.0" prefHeight="25.0" prefWidth="247.0" promptText=" -- Choix du type de Cours --" />
+                        <Line endX="454.0" layoutX="126.0" layoutY="83.0" startX="-100.0" />
+                        <Label layoutX="66.0" layoutY="112.0" text="Nom:" />
+                        <TextField fx:id="editerTypeCours_nomTypeCours" layoutX="150.0" layoutY="108.0" prefHeight="25.0" prefWidth="199.0" promptText="Nom du type de cours..." />
+                        <Button fx:id="editerTypeCours_sauvegarder" layoutX="66.0" layoutY="292.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="256.0" text="Sauvegarder" />
+                        <Button layoutX="376.0" layoutY="292.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="170.0" text="Supprimer" />
+                     </children>
+                  </AnchorPane>
+            </content>
+          </Tab>
+        </tabs>
+      </TabPane>
+   </children>
+</AnchorPane>
