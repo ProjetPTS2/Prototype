@@ -16,6 +16,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
@@ -102,6 +103,15 @@ public class EditerMatieresController extends Fenetre implements Initializable {
         matiere.setDiminutif(this.editerDiminutifMatiere.getText());
         matiere.setNom(this.editerNomMatiere.getText());
         matiere.setCouleur(this.editerCouleurMatiere.getValue());
+        this.actualiserListeMatieres();
+        this.composantEDT.actualiser();
+    }
+    
+    public void supprimerMatiere() {
+        Matiere matiere = this.bdd.getBaseMatieres().rechercher((String)this.choixMatiere.getSelectionModel().getSelectedItem());
+        this.bdd.getBaseMatieres().supprimer(matiere);
+        matiere.setDiminutif("");
+        matiere.setNom("");
         this.actualiserListeMatieres();
         this.composantEDT.actualiser();
     }

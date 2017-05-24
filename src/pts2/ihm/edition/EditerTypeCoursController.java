@@ -109,4 +109,14 @@ public class EditerTypeCoursController extends Fenetre implements Initializable 
         this.changementTab(this.editerTypeCours_choixCours.getSelectionModel().getSelectedIndex());
     }
     
+    public void editerTypeCours_supprimer() {
+        TypeCours tp = this.bdd.getBaseTypeCours().rechercher((String)this.editerTypeCours_choixCours.getSelectionModel().getSelectedItem());
+        this.bdd.getBaseTypeCours().supprimer(tp);
+        tp.setNom(this.editerTypeCours_nomTypeCours.getText());
+        this.editerTypeCours_resultat.setTextFill(Color.GREEN);
+        this.editerTypeCours_resultat.setText("Type de cours supprimé.");
+        this.changementTab(this.editerTypeCours_choixCours.getSelectionModel().getSelectedIndex());
+        
+    }
+    
 }

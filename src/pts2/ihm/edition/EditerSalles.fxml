@@ -9,7 +9,7 @@
 <?import javafx.scene.shape.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2">
+<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
   <children>
     <TabPane layoutX="0.0" layoutY="0.0" prefHeight="400.0" prefWidth="600.0" rotateGraphic="false" tabClosingPolicy="UNAVAILABLE">
       <tabs>
@@ -62,7 +62,7 @@
                     <TextField id="editerSalle_capacite" fx:id="editerSalles_capacite" layoutX="121.0" layoutY="49.0" prefHeight="24.000099999997474" prefWidth="297.0" promptText="Capacité de la salle..." />
                     <Label font="$x2" layoutX="52.0" layoutY="52.0" text="Capacité:" />
                     <Button id="editerSalles_sauvegarder" defaultButton="true" font="$x2" layoutX="22.0" layoutY="219.0" mnemonicParsing="false" onMouseClicked="#editerSalles_sauvegarde" prefHeight="34.0" prefWidth="369.0" text="Sauvegarder" />
-                    <Button cancelButton="false" defaultButton="false" disable="false" layoutX="429.0" layoutY="218.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="140.0" text="Supprimer" textFill="RED">
+                    <Button cancelButton="false" defaultButton="false" disable="false" layoutX="429.0" layoutY="218.0" mnemonicParsing="false" onMouseClicked="#editerSalles_supprimer" prefHeight="34.0" prefWidth="140.0" text="Supprimer" textFill="RED">
                       <font>
                         <Font name="System Bold" size="14.0" />
                       </font>

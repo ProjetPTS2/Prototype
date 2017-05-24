@@ -113,4 +113,14 @@ public class EditerSallesController extends Fenetre implements Initializable {
         this.editerSalles_resultat.setText("Changements sauvegardés.");
         this.changementTab(this.editerSalles_choixSalle.getSelectionModel().getSelectedIndex());
     }
+    
+    public void editerSalles_supprimer() {
+        Salle salle = this.bdd.getBaseSalles().rechercher((String)this.editerSalles_choixSalle.getSelectionModel().getSelectedItem());
+        this.bdd.getBaseSalles().supprimer(salle);
+        salle.setNom(this.editerSalles_nomSalle.getText());
+        salle.setCapacite(Integer.parseInt(this.editerSalles_capacite.getText()));
+        this.editerSalles_resultat.setTextFill(Color.GREEN);
+        this.editerSalles_resultat.setText("Salle supprimée.");
+        this.changementTab(this.editerSalles_choixSalle.getSelectionModel().getSelectedIndex());
+    }
 }

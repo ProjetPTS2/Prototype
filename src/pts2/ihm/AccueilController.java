@@ -21,6 +21,7 @@ import pts2.EDT;
 import pts2.composants.ComposantEDT;
 import pts2.composants.ComposantSemaines;
 import pts2.ihm.edition.AjouterCoursController;
+import pts2.ihm.edition.EditerCoursController;
 import pts2.ihm.edition.EditerTypeCoursController;
 
 /**

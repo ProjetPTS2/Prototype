@@ -115,6 +115,10 @@ public class ComposantEDT extends Pane {
         return this.texteSurvol;
     }
     
+    public Semaine getSemaineActuelle() {
+        return this.semaineActuelle;
+    }
+    
     
     
     

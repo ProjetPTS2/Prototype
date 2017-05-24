@@ -43,6 +43,7 @@ public class EditerCoursController extends Fenetre implements Initializable {
         this.cours = cours;
         super.chargerIHM();
     }    
+
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -134,4 +135,9 @@ public class EditerCoursController extends Fenetre implements Initializable {
         this.stage.close();
     }
     
+    public void supprimer(){
+        this.composantEDT.getSemaineActuelle().getListeCours().remove(this.cours);
+        this.composantEDT.actualiser();
+        this.stage.close();
+    }
 }

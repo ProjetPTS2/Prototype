@@ -9,7 +9,7 @@
 <?import javafx.scene.shape.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2">
+<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
   <children>
     <TextField fx:id="ajouterNomMatiere" layoutX="162.0" layoutY="50.0" prefHeight="26.0" prefWidth="239.0" promptText="Nom de la matière..." text="" />
     <Button layoutX="452.0" layoutY="49.0" mnemonicParsing="false" onMouseClicked="#ajouterMatiere" prefHeight="55.0" prefWidth="109.0" text="Ajouter" />
@@ -54,7 +54,8 @@
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
           </rowConstraints>
         </GridPane>
-        <Button id="sauvegarder" defaultButton="true" font="$x1" layoutX="116.0" layoutY="179.0" mnemonicParsing="false" onMouseClicked="#sauvegarderMatiere" prefHeight="39.0" prefWidth="399.9999000000025" text="Sauvegarder" />
+        <Button id="sauvegarder" defaultButton="true" font="$x1" layoutX="116.0" layoutY="179.0" mnemonicParsing="false" onMouseClicked="#sauvegarderMatiere" prefHeight="39.0" prefWidth="170.0" text="Sauvegarder" />
+            <Button id="sauvegarder" defaultButton="true" font="$x1" layoutX="324.0" layoutY="179.0" mnemonicParsing="false" onMouseClicked="#supprimerMatiere" prefHeight="39.0" prefWidth="170.0" text="Supprimer" />
       </children>
     </AnchorPane>
   </children>

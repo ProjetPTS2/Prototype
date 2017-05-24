@@ -9,9 +9,9 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2">
+<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
   <children>
-    <Button defaultButton="true" layoutX="97.0" layoutY="343.0" mnemonicParsing="false" onMouseClicked="#sauvegarder" prefHeight="30.0" prefWidth="384.0" text="Sauvegarder">
+    <Button defaultButton="true" layoutX="97.0" layoutY="343.0" mnemonicParsing="false" onMouseClicked="#sauvegarder" prefHeight="30.0" prefWidth="159.0" text="Sauvegarder">
       <font>
         <Font size="14.0" fx:id="x1" />
       </font>
@@ -106,5 +106,10 @@
         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
       </rowConstraints>
     </GridPane>
+      <Button defaultButton="true" layoutX="327.0" layoutY="343.0" mnemonicParsing="false" onMouseClicked="#supprimer" prefHeight="30.0" prefWidth="159.0" text="Supprimer">
+         <font>
+            <Font size="14.0" fx:id="x11" />
+         </font>
+      </Button>
   </children>
 </AnchorPane>
