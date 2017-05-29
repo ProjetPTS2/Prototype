@@ -18,8 +18,8 @@ public class Constantes {
     public static final int MARGE_HORIZONTAL = 10;
     public static final int MARGE_VERTICAL = 10;
     
-    public static final int LARGEUR_JOURS = 170, HAUTEUR_JOURS = 50;
-    public static final int LARGEUR_HEURES = 150, HAUTEUR_HEURES = 30;
+    public static final int LARGEUR_JOURS = 170, HAUTEUR_JOURS = 30;
+    public static final int LARGEUR_HEURES = 150, HAUTEUR_HEURES = 20;
     
     public static final Color COULEUR_FOND_EDT = Color.CADETBLUE;
     public static final Color COULEUR_TEXTE_EDT = Color.WHITE;

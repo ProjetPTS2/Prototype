@@ -19,6 +19,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.AnchorPane;
 import pts2.EDT;
 import pts2.composants.ComposantEDT;
+import pts2.composants.ComposantEDTGroupe;
 import pts2.composants.ComposantSemaines;
 import pts2.ihm.edition.AjouterCoursController;
 import pts2.ihm.edition.EditerCoursController;
@@ -33,13 +34,12 @@ public class AccueilController extends Fenetre implements Initializable {
     
     private final EDT edt;
     private ComposantSemaines composantSemaines;
+   
     
     @FXML
     private AnchorPane racinePane;
     @FXML
-    private ScrollPane semainesScrollPane;
-    @FXML
-    private ScrollPane edtScrollPane;
+    private ScrollPane semainesScrollPane, edtPane;
     @FXML
     private Menu snapMenu;
     
@@ -49,7 +49,7 @@ public class AccueilController extends Fenetre implements Initializable {
         super("R3G15", "Accueil.fxml", edt.getBDD(), null);
         super.chargerIHM();
         this.edt = edt;
-        this.composantEDT.initaliserEDT(this.bdd.getBaseSemaines().rechercher(Calendar.getInstance().get(Calendar.WEEK_OF_YEAR)));
+        this.composantEDT.initialiserEDT(this.bdd.getBaseSemaines().rechercher(Calendar.getInstance().get(Calendar.WEEK_OF_YEAR)));
         this.composantSemaines.initialiserComposants(this.bdd.getBaseSemaines(), this.composantEDT);
     }    
     
@@ -65,11 +65,12 @@ public class AccueilController extends Fenetre implements Initializable {
     
     @Override
     public void initialize(URL url, ResourceBundle rb) { 
-        this.composantEDT = new ComposantEDT(this.bdd, this.edtScrollPane);
+        this.composantEDT = new ComposantEDTGroupe(this.bdd, this.edtPane);
         this.composantSemaines = new ComposantSemaines(Calendar.getInstance().get(Calendar.WEEK_OF_YEAR));
         
+        
         this.semainesScrollPane.setContent(this.composantSemaines);
-        this.edtScrollPane.setContent(this.composantEDT);
+        this.edtPane.setContent(this.composantEDT);
     }    
     
     

@@ -28,25 +28,25 @@ import pts2.utilitaire.DragDrop;
 public class ComposantHeure extends ComposantTexte {
 
     private final ComposantEDT edt;
-    private final Semaine semaine;
     private final Cours cours;
-    private boolean sourisSurvol;
+    private Semaine semaine;
     
     private final DragDrop dragDrop;
     
     public ComposantHeure(ComposantEDT edt, Semaine semaine, Cours cours, int x, int y) {
-        super(cours.getMatiere().getDiminutif() + " - " + cours.getTypeCours().getNom(), x + Constantes.LARGEUR_HEURES*cours.getCreneau().getMinute()/60, y, Constantes.LARGEUR_HEURES, Constantes.HAUTEUR_JOURS);
+        super(cours.getMatiere().getDiminutif() + " - " + cours.getTypeCours().getNom() + " - " + cours.getGroupe().getNom(), x + Constantes.LARGEUR_HEURES*cours.getCreneau().getMinute()/60, y, Constantes.LARGEUR_HEURES, Constantes.HAUTEUR_JOURS);
         this.edt = edt;
-        this.semaine = semaine;
         this.cours = cours;
+        this.semaine = semaine;
         this.setLayoutX(x + Constantes.LARGEUR_HEURES*cours.getCreneau().getMinute()/60);
         
         this.rectangle.setWidth(Constantes.LARGEUR_HEURES * cours.getCreneau().getDuree()/60);
+        this.rectangle.setHeight(this.rectangle.getHeight());
         this.rectangle.setFill(cours.getMatiere().getCouleur());
+        this.rectangle.setStroke(Color.BLACK);
         
         this.texte.setFill(Color.WHITE);
         
-        this.sourisSurvol = false;
         this.dragDrop = new DragDrop();
     }
     
@@ -59,7 +59,7 @@ public class ComposantHeure extends ComposantTexte {
                 scene.setCursor(Cursor.HAND);
                 updateTexteSurvol();
                 edt.getTexteSurvol().setVisible(true);
-                sourisSurvol = true;
+              
             }
         });
         
@@ -70,7 +70,6 @@ public class ComposantHeure extends ComposantTexte {
                     setCouleurFond(cours.getMatiere().getCouleur());
                 scene.setCursor(Cursor.DEFAULT);
                 edt.getTexteSurvol().setVisible(false);
-                sourisSurvol = false;
             }
         });
         
@@ -103,11 +102,20 @@ public class ComposantHeure extends ComposantTexte {
                         "\nType: " + cours.getTypeCours().getNom() + 
                         "\nSalle: " + cours.getSalle().getNom() +
                         "\nEnseignant: " + cours.getEnseignant().toString() +
+                        "\nGroupe: " + cours.getGroupe().getNom() +
                         "\n" + cours.getCreneau().getJours().getNom() + " - " + cours.getCreneau().getHeureDebutString() + " - " + cours.getCreneau().getHeureFinString());
+    }
+    
+    private void updateTexte() {
+        this.setTexte(cours.getMatiere().getDiminutif() + " - " + cours.getTypeCours().getNom() + " - " + cours.getGroupe().getNom());
     }
     
     public Cours getCours() {
         return this.cours;
+    }
+    
+    public DragDrop getDragDrop() {
+        return this.dragDrop;
     }
     
     
@@ -120,59 +128,14 @@ public class ComposantHeure extends ComposantTexte {
             cours.setCreneau(this.dragDrop.getCreneauPlacement());
             texte.setText(texteParDefaut);
             this.dragDrop.setPlacementInvalide(false);
-            sourisSurvol = false;
         }
         super.setCouleurFond(cours.getMatiere().getCouleur());
         return retour;
     }
     
     
-    public void deplacement(double sourisX, double sourisY, Node parent) {  
+    public void deplacement(double compX, double compY, Node parent) {  
         this.toFront();
-
-        int x = (int)(sourisX - parent.getLayoutX());
-        int y = (int)(sourisY - parent.getLayoutY());
-
-        
-        x -= this.dragDrop.getDecalage();
-
-
-        // Ajout du décalage du ScrollPane
-        if(parent instanceof ScrollPane)
-            x += -1 * (int)((ScrollPane)(parent)).getViewportBounds().getMinX() + 1;
-
-        int origineX = Constantes.LARGEUR_JOURS + Constantes.MARGE_HORIZONTAL;
-        int origineY = Constantes.HAUTEUR_JOURS - Constantes.MARGE_VERTICAL;
-
-        int colonne = (x - Constantes.LARGEUR_JOURS - Constantes.MARGE_HORIZONTAL)/Constantes.LARGEUR_HEURES;
-        int ligne = (y + Constantes.MARGE_VERTICAL)/Constantes.HAUTEUR_JOURS - 1;
-        if(ligne < 0)
-            ligne = 0;
-        if(ligne >= Jours.values().length)
-            ligne = Jours.values().length-1;
-
-
-        int heure = colonne + Constantes.HEURE_DEBUT;
-        Jours jours = Jours.values()[ligne];
-
-        int minute = Math.abs(60*(colonne * Constantes.LARGEUR_HEURES + (Constantes.LARGEUR_JOURS + Constantes.MARGE_HORIZONTAL) - x)/Constantes.LARGEUR_HEURES);
-        minute /= AccueilController.SNAP;
-        minute *= AccueilController.SNAP;
-
-        int compX = Constantes.MARGE_HORIZONTAL + Constantes.LARGEUR_JOURS 
-                + (heure-Constantes.HEURE_DEBUT) * Constantes.LARGEUR_HEURES
-                + (int)(Constantes.LARGEUR_HEURES * (float)minute/60f);
-        int compY = ligne * Constantes.HAUTEUR_JOURS + origineY;
-        if(x < origineX) {
-            compX = origineX;
-            minute = 0;
-        }
-
-        cours.getCreneau().setJours(jours);
-        cours.getCreneau().setHeure(heure);
-        cours.getCreneau().setMinute(minute);
-        
-        this.updateTexteSurvol();
 
         this.dragDrop.setPlacementInvalide(this.semaine.intersectionHeure(this.cours.getCreneau()));
 
@@ -182,8 +145,10 @@ public class ComposantHeure extends ComposantTexte {
         }
         else {
             setCouleurFond(cours.getMatiere().getCouleur());
-            texte.setText(texteParDefaut);
+            this.updateTexte();
         }
+        
+        this.updateTexteSurvol();
         setLayoutX(compX);
         setLayoutY(compY);
     }

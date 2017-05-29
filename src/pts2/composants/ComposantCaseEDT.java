@@ -5,6 +5,7 @@
  */
 package pts2.composants;
 
+import javafx.geometry.Insets;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -23,9 +24,8 @@ public class ComposantCaseEDT extends StackPane {
         this.setLayoutY(y);
         
         this.rectangle = new Rectangle(Constantes.LARGEUR_HEURES, Constantes.HAUTEUR_JOURS);
-        this.rectangle.setFill(Color.WHITE);
-        
-        this.rectangle.setStroke(Color.BLACK);    
+        this.rectangle.setFill(Color.WHITE);  
+        this.rectangle.setStroke(Color.BLACK);
         
         super.getChildren().add(this.rectangle);
     }

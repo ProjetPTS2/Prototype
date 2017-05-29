@@ -10,6 +10,7 @@ import pts2.utilitaire.XMLSauvegarde;
 
 public class Cours implements ISauvegarde {
     
+    private Groupe groupe;
     private Creneau creneau;
     private Enseignant enseignant;
     private TypeCours typeCours;
@@ -24,7 +25,8 @@ public class Cours implements ISauvegarde {
      * @param salle La salle de ce cours.
      * @param typeCours Le type de ce cours.
      */
-    public Cours(Creneau creneau, Enseignant enseignant, Matiere matiere, Salle salle, TypeCours typeCours) {
+    public Cours(Creneau creneau, Groupe groupe, Enseignant enseignant, Matiere matiere, Salle salle, TypeCours typeCours) {
+        this.groupe = groupe;
         this.creneau = creneau;
         this.enseignant = enseignant;
         this.matiere = matiere;
@@ -34,6 +36,10 @@ public class Cours implements ISauvegarde {
     
     public Creneau getCreneau() {
         return this.creneau;
+    }
+    
+    public Groupe getGroupe() {
+        return this.groupe;
     }
     
     public Enseignant getEnseignant() {
@@ -62,6 +68,10 @@ public class Cours implements ISauvegarde {
             this.creneau = creneau;
     }
     
+    public void setGroupe(Groupe groupe) {
+        this.groupe = groupe;
+    }
+    
     public void setEnseignant(Enseignant enseignant) {
         this.enseignant = enseignant;
     }
@@ -86,6 +96,7 @@ public class Cours implements ISauvegarde {
         attributs.put("matiere", this.matiere.getDiminutif());
         attributs.put("salle", this.salle.getNom());
         attributs.put("typecours", this.typeCours.getNom());
+        attributs.put("groupe", this.groupe.getNom());
         xml.ouvrirBalise("Cours", attributs, true);
         this.creneau.sauvegarder(xml);
         xml.fermerBalise();
@@ -100,5 +111,6 @@ public class Cours implements ISauvegarde {
         this.creneau = new Creneau(Jours.LUNDI, 0, 0, 0);
         this.creneau.charger(bdd, ((Element)(element.getElementsByTagName("Creneau").item(0))));
         this.typeCours = bdd.getBaseTypeCours().rechercher(element.getAttribute("typecours"));
+        this.groupe = bdd.getBaseGroupe().rechercher(element.getAttribute("groupe"));
     }
 }

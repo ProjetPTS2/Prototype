@@ -16,6 +16,7 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import pts2.donnees.Cours;
 import pts2.donnees.Enseignant;
+import pts2.donnees.Groupe;
 import pts2.donnees.TypeCours;
 import pts2.ihm.AccueilController;
 import pts2.ihm.Fenetre;
@@ -79,13 +80,30 @@ public class EDT extends Application {
         Enseignant bebien = new Enseignant("BEBIEN", "Vincent");
         Enseignant doucet = new Enseignant("DOUCET", "Antoine");
         this.bdd.getBaseEnseignants().ajouter(bebien);       
-        this.bdd.getBaseEnseignants().ajouter(doucet);       
+        this.bdd.getBaseEnseignants().ajouter(doucet);    
+        
+        Groupe groupeA = new Groupe("A");
+        groupeA.getSousGroupes().add(new Groupe("A1"));
+        groupeA.getSousGroupes().add(new Groupe("A2"));
+        Groupe groupeB = new Groupe("B");
+        groupeB.getSousGroupes().add(new Groupe("B1"));
+        groupeB.getSousGroupes().add(new Groupe("B2"));
+        Groupe groupeC = new Groupe("C");
+        groupeC.getSousGroupes().add(new Groupe("C1"));
+        groupeC.getSousGroupes().add(new Groupe("C2"));
+        Groupe groupeD = new Groupe("D");
+        groupeD.getSousGroupes().add(new Groupe("D1"));
+        groupeD.getSousGroupes().add(new Groupe("D2"));
+        this.bdd.getBaseGroupe().ajouter(groupeA);
+        this.bdd.getBaseGroupe().ajouter(groupeB);
+        this.bdd.getBaseGroupe().ajouter(groupeC);
+        this.bdd.getBaseGroupe().ajouter(groupeD);
         
         
         bebien.ajouterMatiere(this.bdd.getBaseMatieres().rechercher("ANG"));
         bebien.ajouterMatiere(this.bdd.getBaseMatieres().rechercher("POO"));   
         
-        Cours testCours1 = new Cours(new Creneau(Jours.JEUDI, 10, 10, 120), bebien, this.bdd.getBaseMatieres().rechercher("POO"), this.bdd.getBaseSalles().rechercher("D201"), this.bdd.getBaseTypeCours().rechercher("TD"));
+        Cours testCours1 = new Cours(new Creneau(Jours.JEUDI, 10, 10, 120), this.bdd.getBaseGroupe().rechercher("B"), bebien, this.bdd.getBaseMatieres().rechercher("POO"), this.bdd.getBaseSalles().rechercher("D201"), this.bdd.getBaseTypeCours().rechercher("TD"));
         
         
         

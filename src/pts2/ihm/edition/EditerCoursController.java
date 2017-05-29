@@ -19,6 +19,7 @@ import pts2.bdd.BDD;
 import pts2.composants.ComposantEDT;
 import pts2.donnees.Cours;
 import pts2.donnees.Enseignant;
+import pts2.donnees.Groupe;
 import pts2.donnees.Matiere;
 import pts2.donnees.Salle;
 import pts2.donnees.TypeCours;
@@ -34,9 +35,9 @@ public class EditerCoursController extends Fenetre implements Initializable {
     private final Cours cours;
     
     @FXML
-    private ComboBox typeCours, enseignant, matiere, salle;
+    private ComboBox typeCours, enseignant, matiere, salle, groupe;
     @FXML
-    private TextField heureTexte, minuteTexte, dureeTexte;
+    private TextField dureeTexte;
     
     public EditerCoursController(BDD bdd, ComposantEDT edt, Cours cours) {
         super("Editer un cours", "EditerCours.fxml", bdd, edt);
@@ -96,19 +97,31 @@ public class EditerCoursController extends Fenetre implements Initializable {
         this.typeCours.setItems(FXCollections.observableList(liste));
         this.typeCours.getSelectionModel().select(index);
         
-        this.heureTexte.setText(this.cours.getCreneau().getHeure() + "");
-        this.minuteTexte.setText(this.cours.getCreneau().getMinute() + "");
+        
+        
+        
+        
+        index = 0; i = 0;
+        liste = new ArrayList<>();
+        for(Groupe _groupe : this.bdd.getBaseGroupe().getListeDonnees()) {
+            if(_groupe.getNom().equals(this.cours.getGroupe().getNom()))
+                index = i;
+            liste.add(_groupe.getNom());
+            i++;
+            
+            for(Groupe _sGr : _groupe.getSousGroupes()) {
+                if(_sGr.getNom().equals(this.cours.getGroupe().getNom()))
+                    index = i;
+                liste.add(_sGr.getNom());
+                i++;
+            }
+        }
+        this.groupe.setItems(FXCollections.observableList(liste));
+        this.groupe.getSelectionModel().select(index);
+        
+        
+        
         this.dureeTexte.setText(this.cours.getCreneau().getDuree() + "");
-        
-        
-        this.heureTexte.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
-            if (!newValue.matches("\\d*") || newValue.length() > 2)
-                this.heureTexte.setText(oldValue);
-        });
-        this.minuteTexte.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
-            if (!newValue.matches("\\d*") || newValue.length() > 2)
-                this.minuteTexte.setText(oldValue);
-        });
         
         this.dureeTexte.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
             if (!newValue.matches("\\d*"))
@@ -127,8 +140,25 @@ public class EditerCoursController extends Fenetre implements Initializable {
         this.cours.setEnseignant(this.bdd.getBaseEnseignants().rechercher((String)this.enseignant.getSelectionModel().getSelectedItem()));
         this.cours.setTypeCours(this.bdd.getBaseTypeCours().rechercher((String)this.typeCours.getSelectionModel().getSelectedItem()));
         
-        this.cours.getCreneau().setHeure(Integer.parseInt(this.heureTexte.getText()));
-        this.cours.getCreneau().setMinute(Integer.parseInt(this.minuteTexte.getText()));
+        String nomGroupe = (String)this.groupe.getSelectionModel().getSelectedItem();
+        Groupe groupeObj = null;
+        for(Groupe gr : this.bdd.getBaseGroupe().getListeDonnees()) {
+            if(groupeObj != null)
+                break;
+            if(gr.getNom().equals(nomGroupe)) {
+                groupeObj = gr;
+                break;
+            }
+            
+            for(Groupe sGr : gr.getSousGroupes()) {
+                if(sGr.getNom().equals(nomGroupe)) {
+                    groupeObj = sGr;
+                    break;
+                }
+            }
+        }
+        this.cours.setGroupe(groupeObj);
+        
         this.cours.getCreneau().setDuree(Integer.parseInt(this.dureeTexte.getText()));        
         
         this.composantEDT.actualiser();

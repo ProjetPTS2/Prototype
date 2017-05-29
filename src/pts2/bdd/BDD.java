@@ -11,6 +11,7 @@ public class BDD {
     private final BaseSemaines baseSemaines;
     private final BaseTypeCours baseTypeCours;
     private final BaseSalles baseSalles;
+    private final BaseGroupe baseGroupes;
     
     /**
      * Constructeur de la Base de données sans fichier de sauvegarde.
@@ -30,6 +31,7 @@ public class BDD {
         this.baseSemaines = new BaseSemaines(this);
         this.baseTypeCours = new BaseTypeCours(this);
         this.baseSalles = new BaseSalles(this);
+        this.baseGroupes = new BaseGroupe(this);
     }
     
     public File getRepertoire() {
@@ -60,6 +62,10 @@ public class BDD {
         return this.baseMatieres;
     }
     
+    public BaseGroupe getBaseGroupe() {
+        return this.baseGroupes;
+    }
+    
     public void setRepertoire(File dossier) {
         this.repertoire = dossier;
     }
@@ -73,6 +79,7 @@ public class BDD {
         this.getBaseSalles().sauvegarder();
         this.getBaseSemaines().sauvegarder();
         this.getBaseTypeCours().sauvegarder();
+        this.getBaseGroupe().sauvegarder();
     }
     
     /**
@@ -84,6 +91,7 @@ public class BDD {
         this.getBaseSalles().vider();
         this.getBaseTypeCours().vider();
         this.getBaseSemaines().vider();
+        this.getBaseGroupe().vider();
     }
     
     /**
@@ -96,6 +104,7 @@ public class BDD {
         }
         this.vider();
         this.getBaseMatieres().charger();
+        this.getBaseGroupe().charger();
         this.getBaseEnseignants().charger();
         this.getBaseSalles().charger();
         this.getBaseTypeCours().charger();

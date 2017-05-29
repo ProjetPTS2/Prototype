@@ -31,13 +31,14 @@ public class ComposantTexte extends StackPane {
         this.rectangle = new Rectangle(largeur, hauteur);
         this.rectangle.setFill(Color.WHITE);
         
-        this.rectangle.setStroke(Color.BLACK);
         this.texte = new Text(texteParDefaut);
         
         this.texte.setFill(Color.BLACK);
         this.texte.setFont(new Font("Roboto", 18));
         this.texte.setBoundsType(TextBoundsType.VISUAL);
+        this.rectangle.setStroke(Color.BLACK);
         
+        super.getStyleClass().add("cell");
         super.getChildren().add(this.rectangle);
         super.getChildren().add(this.texte);
     }

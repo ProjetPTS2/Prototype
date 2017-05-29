@@ -56,9 +56,14 @@ public class ComposantTexteSurvol extends StackPane {
     public void actualiserPosition(ScrollPane scrollPane, ComposantEDT edt, double x, double y) {
         double minX = -1 * scrollPane.getViewportBounds().getMinX() + 1;
         double maxX = minX + scrollPane.getViewportBounds().getWidth();
+        double minY = -1 * scrollPane.getViewportBounds().getMinY() + 1;
+        double maxY = minY + scrollPane.getViewportBounds().getHeight();
         double _x = minX + x;
+        double _y = minY + y;
         if((_x + this.getWidth() + MARGIN_LEFT + PADDING_LEFT_RIGHT) > maxX)
             _x = x - this.getWidth() - 2*MARGIN_LEFT - 2*PADDING_LEFT_RIGHT + minX;
-        this.setPosition(_x, y);
+        if((_y + this.getHeight() + MARGIN_LEFT + PADDING_LEFT_RIGHT) > maxY)
+            _y = y - this.getHeight() - 2*MARGIN_LEFT - 2*PADDING_LEFT_RIGHT + minY;
+        this.setPosition(_x, _y);
     }
 }

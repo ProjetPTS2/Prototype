@@ -17,7 +17,7 @@ public class DragDrop {
     private boolean placementInvalide, placementEnCours;
     private double anciennePositionX, anciennePositionY, decalage;
     
-    public DragDrop() {}
+    public DragDrop() { this.decalage = 20; }
     
     public void setDecalage(double valeur) {
         this.decalage = valeur;

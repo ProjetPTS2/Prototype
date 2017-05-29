@@ -21,6 +21,7 @@ import pts2.donnees.Jours;
 import pts2.donnees.Cours;
 import pts2.donnees.Enseignant;
 import pts2.donnees.Creneau;
+import pts2.donnees.Groupe;
 import pts2.donnees.Matiere;
 import pts2.donnees.Salle;
 import pts2.donnees.TypeCours;
@@ -90,8 +91,9 @@ public class AjouterCoursController extends Fenetre implements Initializable {
         Salle _salle = this.bdd.getBaseSalles().rechercher((String)this.salle.getSelectionModel().getSelectedItem());
         TypeCours _typeCours = this.bdd.getBaseTypeCours().rechercher((String)this.typeCours.getSelectionModel().getSelectedItem());
         int _duree = Integer.parseInt(dureeTexte.getText());
+        Groupe _groupe = this.bdd.getBaseGroupe().rechercher("C1");
         
-        Cours cours = new Cours(new Creneau(Jours.LUNDI, 8, 0, _duree), _enseignant, _matiere, _salle, _typeCours);
+        Cours cours = new Cours(new Creneau(Jours.LUNDI, 8, 0, _duree), _groupe, _enseignant, _matiere, _salle, _typeCours);
         this.composantEDT.ajouterCoursTemporaire(cours);
         this.stage.close();
     }

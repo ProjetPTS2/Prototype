@@ -70,7 +70,7 @@ public class Semaine implements ISauvegarde {
         NodeList listeCours = element.getElementsByTagName("Cours");
         for(int i = 0; i < listeCours.getLength(); i++) {
             Element e = ((Element)listeCours.item(i));
-            Cours cours = new Cours(null, null, null, null, null);
+            Cours cours = new Cours(null, null, null, null, null, null);
             cours.charger(bdd, e);
             this.listeCours.add(cours);
         }
