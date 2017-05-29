@@ -139,31 +139,45 @@ public class ComposantEDTGroupe extends ComposantEDT {
             int jours = (int) (eventY/ hauteurJours); //ID du jour
             int groupe = (int)(eventY/Constantes.HAUTEUR_JOURS)%nombreGroupes; //Id du groupe (à partir de 0)
             
+            boolean sousGroupe = this.coursEnDeplacement.getCours().getGroupe().getSousGroupes().isEmpty();
+            
             if(eventX < 0) {
                 heure = 0;
                 heure_reel = Constantes.HEURE_DEBUT;
                 minute = 0;
             }
             
-            int i = 0;
+            int index = 0;
             Groupe groupeObj = null;
+            boolean trouve = false;
             for(Groupe gr : this.bdd.getBaseGroupe().getListeDonnees()) {
-                for(Groupe sr : gr.getSousGroupes()) {
-                    if(i == groupe)
-                        groupeObj = sr;
-                    i++;
-                }
-                if(gr.getSousGroupes().isEmpty()) {
-                    if(i == groupe)
-                        groupeObj = gr;
-                    i++;
-                }
-                if(i > groupe)
+                if(trouve)
                     break;
+                if(index == groupe && !sousGroupe) {
+                    groupeObj = gr;
+                    trouve = true;
+                    break;
+                }
+                
+                if(!gr.getSousGroupes().isEmpty()) {
+                    for(Groupe sg : gr.getSousGroupes()) {
+                        if(index == groupe) {
+                            groupeObj = sg;
+                            trouve = true;
+                            break;
+                        } else
+                            index++;
+                    }
+                } else if(sousGroupe)
+                    index++;
+                                    
             }
             
+            boolean valide = groupeObj.getSousGroupes().isEmpty() == sousGroupe;
+            
             Cours cours = this.coursEnDeplacement.getCours();
-            cours.setGroupe(groupeObj);
+            if(valide)
+                cours.setGroupe(groupeObj);
             cours.getCreneau().setHeure(heure_reel);
             cours.getCreneau().setMinute(minute);
             cours.getCreneau().setJours(Jours.values()[jours]);
@@ -173,7 +187,7 @@ public class ComposantEDTGroupe extends ComposantEDT {
             
             double m = minute*Constantes.LARGEUR_HEURES/60;
             double compX = heure*Constantes.LARGEUR_HEURES + m + Constantes.LARGEUR_JOURS;
-            double compY = groupe * Constantes.HAUTEUR_JOURS + jours * hauteurJours + Constantes.HAUTEUR_HEURES;
+            double compY = (valide) ? groupe * Constantes.HAUTEUR_JOURS + jours * hauteurJours + Constantes.HAUTEUR_HEURES : this.coursEnDeplacement.getLayoutY();
             this.coursEnDeplacement.deplacement(compX, compY, this.scrollPane);
         }
         
